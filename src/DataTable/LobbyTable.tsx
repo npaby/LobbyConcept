@@ -199,8 +199,8 @@ export default function DataTableDemo() {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <Label>{selectedRole}</Label>
-                                    <Label>{selectedRank}</Label>
+                                    {/*<Label>{selectedRole}</Label>*/}
+                                    {/*<Label>{selectedRank}</Label>*/}
                                 </div>
 
                                 <DialogFooter>
@@ -294,15 +294,13 @@ export default function DataTableDemo() {
                                             Rank
                                         </Label>
                                         <Select
-                                            onValueChange={(value) => setSelectedRank(value || '')}
-                                            onOpenChange={(isOpen) => !isOpen && setSelectedRank('')}>
+                                            onValueChange={(value) => setSelectedRank(value)}>
                                             <SelectTrigger className="w-[280px]">
                                                 <SelectValue placeholder="Select a rank"/>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Ranks</SelectLabel>
-                                                    <SelectItem value="">None</SelectItem> {/* Reset option */}
                                                     <SelectItem value="Herald">Herald</SelectItem>
                                                     <SelectItem value="Guardian">Guardian</SelectItem>
                                                     <SelectItem value="Crusader">Crusader</SelectItem>
@@ -314,7 +312,6 @@ export default function DataTableDemo() {
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
-
                                     </div>
                                 </div>
                                 <DialogFooter>

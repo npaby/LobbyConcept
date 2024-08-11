@@ -1,13 +1,8 @@
-import { useParams } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./components/ui/card";
-import {
-    ContextMenu,
-    ContextMenuContent,
-    ContextMenuItem,
-    ContextMenuTrigger,
-} from "./components/ui/context-menu";
-import { dummyLobbies } from "./DataTable/data";
-import { Button } from "./components/ui/button";
+import {useParams} from "react-router-dom";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "./components/ui/card";
+import {ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger,} from "./components/ui/context-menu";
+
+import {Button} from "./components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -16,22 +11,24 @@ import {
     DialogHeader,
     DialogTitle,
 } from "./components/ui/dialog";
-import { useState } from "react";
-import {ScrollArea } from "./components/ui/scroll-area";
-import { Textarea } from "./components/ui/textarea"
+import {useState} from "react";
+import {ScrollArea} from "./components/ui/scroll-area";
+import {Textarea} from "./components/ui/textarea"
+import {useLobbies} from "./LobbyContext";
+
 export default function LobbyPage() {
-    const { lobbyId } = useParams();
-    const lobby = dummyLobbies.find(
+    const {lobbyId} = useParams();
+    const {lobbies} = useLobbies();
+    const lobby = lobbies.find(
         lobby => lobby.Lobby_Id === Number(lobbyId)
     );
 
     if (!lobby) {
         return <div>Lobby not found</div>;
     }
-
     const members = [...lobby.Members];
     while (members.length < 5) {
-        members.push({ user_id: null, user_owner: false });
+        members.push({user_id: null, user_owner: false});
     }
 
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
@@ -68,6 +65,7 @@ export default function LobbyPage() {
                                         }
                                     }}
                                 >
+                                    {/*--//TODO: If current user is owner, allow user to kick--*/}
                                     {member.user_id ? "Kick" : "Invite"}
                                 </ContextMenuItem>
 
@@ -127,7 +125,7 @@ export default function LobbyPage() {
                             ))}
                         </div>
                     </ScrollArea>
-                    <Textarea className="mt-4 h-12 text-black" placeholder="Type your message here." />
+                    <Textarea className="mt-4 h-12 text-black" placeholder="Type your message here."/>
                     <Button className="mt-2 w-full bg-blue-400 text-white">Send</Button>
                 </CardContent>
             </Card>

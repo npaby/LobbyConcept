@@ -1,11 +1,13 @@
 import './App.css';
 import AppRoutes from "./AppRoutes.tsx";
 import { ThemeProvider } from "./components/theme-provider";
-
+import { LobbyProvider } from "./LobbyContext";
 function App() {
     return (
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-            <AppRoutes />
+            <LobbyProvider>
+                <AppRoutes />
+            </LobbyProvider>
         </ThemeProvider>
     );
 }

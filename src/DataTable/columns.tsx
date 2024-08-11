@@ -11,7 +11,7 @@ export const columns: ColumnDef<Lobby>[] = [
         header: ({ column }) => {
             return (
                 <div className="w-16 bg-white"> {/* Set a fixed width or use a smaller width value */}
-                    <Button className={"bg-white hover:bg-white text-black hover:text-black"}
+                    <Button className={"text-lg bg-white hover:bg-white text-black hover:text-black"}
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
                         Lobby_Id
@@ -21,7 +21,7 @@ export const columns: ColumnDef<Lobby>[] = [
             );
         },
         cell: ({ row }) => (
-            <div className="w-24"> {/* Apply the same width to the cell content */}
+            <div className="w-24 text-lg"> {/* Apply the same width to the cell content */}
                 {row.getValue("Lobby_Id")}
             </div>
         ),
@@ -31,13 +31,13 @@ export const columns: ColumnDef<Lobby>[] = [
         accessorKey: "Lobby_Name",
         header: () => {
             return (
-                <div className="w-1/3">
+                <div className="text-lg">
                     Lobby Name
                 </div>
             );
         },
         cell: ({ row }) => (
-            <div className="text-left bg-blue-600">
+            <div className="text-lg text-left">
                 {row.getValue("Lobby_Name")}
             </div>
         ),
@@ -46,13 +46,13 @@ export const columns: ColumnDef<Lobby>[] = [
       accessorKey :"Rank",
         header: () => {
             return (
-                <div className="w-24 bg-blue-200">
+                <div className="text-lg w-24">
                     Rank
                 </div>
             );
         },
       cell: ({ row }) => {
-          return <div className={"text-left"}>{row.getValue("Rank")}</div>
+          return <div className={"text-lg text-left"}>{row.getValue("Rank")}</div>
       },
         filterFn: (row, columnId, value) => {
             return row.getValue(columnId).toString().toLowerCase().includes(value.toLowerCase());
@@ -60,18 +60,20 @@ export const columns: ColumnDef<Lobby>[] = [
     },
     {
         accessorKey: "Members",
-        header: "Members:  For visual only",
+        header: () => {
+            return (<div className={"text-lg text-center"}>Members</div>)
+        },
         cell: ({ row }) => {
             const members = row.original.Members;
             return (
-                <ul className={"text-left text-blue-900 w-44"}>
-                    {<li className={"text-center"} key={"empty"}>{members.length}/5</li>}
-                    {members.map((member, index) => (
-                        <li key={index}>
-                            {member.user_role} {member.user_owner ? <b>({member.user_id})</b> : `(${member.user_id})`}
-                        </li>
+                <ul className={"text-left text-blue-900"}>
+                    {<li className={"text-lg text-center"} key={"empty"}>{members.length}/5</li>}
+                    {/*{members.map((member, index) => (*/}
+                    {/*    <li key={index}>*/}
+                    {/*        {member.user_role} {member.user_owner ? <b>({member.user_id})</b> : `(${member.user_id})`}*/}
+                    {/*    </li>*/}
 
-                    ))}
+                    {/*))}*/}
                 </ul>
             );
         },
@@ -82,14 +84,23 @@ export const columns: ColumnDef<Lobby>[] = [
     {
         id: "Join",
         enableHiding: false,
-        header:"Join",
+        header:() =>{
+            return (
+                <div className={"text-lg text-center"}>
+                    Join Lobby
+                </div>
+            )
+        },
         cell: ({ row }) => {
             const navigate = useNavigate();
-
             return (
-                <div className={"text-left"}>
+                <div className={"text-center p-0"}>
                     <Dialog >
-                        <DialogTrigger >Open</DialogTrigger>
+                        <DialogTrigger asChild>
+                            <Button className={" text-lg w-36 h-12 bg-blue-500 p-2 m-0 radius-3xl"}>
+                                Join Lobby
+                            </Button>
+                        </DialogTrigger>
                         <DialogContent className={"bg-white w-64"}>
                             <DialogHeader className={"pb-2"}>
                                 <DialogTitle>Are you absolutely sure?</DialogTitle>

@@ -1,5 +1,4 @@
 import * as React from "react";
-import {useState} from "react";
 import {
     ColumnFiltersState,
     flexRender,
@@ -11,14 +10,14 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table";
-import {Button} from "../components/ui/button.tsx";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "../components/ui/table.tsx";
-import {dummyLobbies as data} from "./data.tsx";
-import {columns} from "./columns.tsx";
-import {ScrollArea} from "../components/ui/scroll-area.tsx";
-import {Label} from "../components/ui/label.tsx";
-import {Input} from "../components/ui/input.tsx";
-
+import { Button } from "../components/ui/button.tsx";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.tsx";
+import { useLobbies } from '../LobbyContext'; // Use centralized state for lobbies
+import { columns } from "./columns.tsx";
+import { ScrollArea } from "../components/ui/scroll-area.tsx";
+import { Label } from "../components/ui/label.tsx";
+import { Input } from "../components/ui/input.tsx";
+import { RefreshCw } from 'lucide-react';
 import {
     Select,
     SelectContent,
@@ -27,7 +26,7 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "../components/ui/select"
+} from "../components/ui/select";
 import {
     Dialog,
     DialogContent,
@@ -39,33 +38,60 @@ import {
 } from "../components/ui/dialog.tsx";
 
 export default function DataTableDemo() {
+    // Managing the state of the table
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
-    const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
-    const [isCreateLobbyDialogOpen, setIsCreateLobbyDialogOpen] = useState(false);
-    const openFilterDialog = () => {
-        setIsCreateLobbyDialogOpen(false); // Ensure the other dialog is closed
-        setIsFilterDialogOpen(true);
+    const [isFilterDialogOpen, setIsFilterDialogOpen] = React.useState(false);
+    const [isCreateLobbyDialogOpen, setIsCreateLobbyDialogOpen] = React.useState(false);
+    const { lobbies, addLobby } = useLobbies(); // Get lobbies and addLobby function from context
+    const [selectedRank, setSelectedRank] = React.useState<string>('');
+    const [selectedRole, setSelectedRole] = React.useState<string>('');
+
+    const handleCreateLobby = () => {
+        const lobbyName = document.getElementById('lobbyName').value;
+        const rankName = selectedRank;
+
+        const newLobby = {
+            Lobby_Id: lobbies.length + 1,
+            Lobby_Name: lobbyName,
+            Rank: rankName,
+            Members: [
+                {
+                    user_id: Date.now(),
+                    user_role: "Carry",
+                    user_owner: true,
+                }
+            ]
+        };
+
+        addLobby(newLobby);
+        closeCreateLobbyDialog();
     };
-    const closeFilterDialog = () => setIsFilterDialogOpen(false);
+
     const openCreateLobbyDialog = () => {
         setIsFilterDialogOpen(false); // Ensure the other dialog is closed
         setIsCreateLobbyDialogOpen(true);
     };
     const closeCreateLobbyDialog = () => setIsCreateLobbyDialogOpen(false);
-    const [selectedRank, setSelectedRank] = useState<string>('');
-    const [selectedRole, setSelectedRole] = useState<string>('');
+
+    const openFilterDialog = () => {
+        setIsCreateLobbyDialogOpen(false); // Ensure the other dialog is closed
+        setIsFilterDialogOpen(true);
+    };
+    const closeFilterDialog = () => setIsFilterDialogOpen(false);
+
     const handleApplyFilter = () => {
         setColumnFilters([
-            {id: 'Rank', value: selectedRank},
-            {id: 'Members', value: selectedRole}
+            { id: 'Rank', value: selectedRank },
+            { id: 'Members', value: selectedRole }
         ]);
         closeFilterDialog();
     };
+
     const table = useReactTable({
-        data,
+        data: lobbies, // Use the lobbies from the context
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -88,34 +114,20 @@ export default function DataTableDemo() {
         }
     });
 
-
-    // Get the number of rows
-    const totalNumberofRows = data.length;
+    const totalNumberofRows = lobbies.length;
     const numberOfRows = table.getFilteredRowModel().rows.length;
     return (
         <div>
-            {/*<div className="text-left text-lg m-10">*/}
-            {/*    <Label className="text-xl font-bold mb-4">Lobby*/}
-            {/*        Overview</Label> /!* Added margin-bottom to separate the title from the form *!/*/}
-            {/*    <div className="flex flex-col space-y-4">*/}
-            {/*        <Input className={"flex-1"} type="text" placeholder="Email"*/}
-            {/*               className="w-full"/> /!* Ensures the input takes full width *!/*/}
-            {/*        <Button className="flex-2 w-full mt-2">Search</Button> /!* Ensures the button takes full width *!/*/}
-            {/*    </div>*/}
-            {/*</div>*/}
             <div className="text-left text-lg m-2">
                 <div className="mb-5">
                     <Label className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                         Lobbies
                     </Label>
-                    {/*<Label className="text-xl font-bold ">*/}
-                    {/*    Lobby Overview*/}
-                    {/*</Label>*/}
                 </div>
+                {/*--Container--*/}
                 <div className={"flex flex-row"}>
                     {/*--Filtering through lobby name--*/}
-                    <div
-                        className={"flex flex-row space-x-4 w-1/2"}>
+                    <div className={"flex flex-row space-x-4 w-1/2"}>
                         <Input className="flex-1 w-24" type="text"
                                value={(table.getColumn("Lobby_Name")?.getFilterValue() as string) ?? ""}
                                onChange={(event) =>
@@ -124,10 +136,13 @@ export default function DataTableDemo() {
                                placeholder="Enter Lobby Name"/>
                         <Button className="flex-none">Search</Button>
                     </div>
-
-                    {/*--This is for filtering the table using preferences--*/}
+                    {/*--Organize buttons--*/}
                     <div className="flex flex-row space-x-4 justify-end ml-auto">
-
+                        {/*--//TODO:For refresing the database--*/}
+                        <Button className="flex-none">
+                            <RefreshCw className="flex-none" size={18}/>
+                        </Button>
+                        {/*--This is for filtering the table using preferences--*/}
                         <Dialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen}>
                             <DialogTrigger asChild>
                                 <Button className="flex-none" onClick={openFilterDialog}>
@@ -194,8 +209,61 @@ export default function DataTableDemo() {
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-
                         {/*--This is for Creating a Lobby--*/}
+                        {/*<Dialog open={isCreateLobbyDialogOpen} onOpenChange={setIsCreateLobbyDialogOpen}>
+                            <DialogTrigger asChild>
+                                <Button className="flex-none" onClick={openCreateLobbyDialog}>
+                                    Create Lobby
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px] bg-white">
+                                <DialogHeader>
+                                    <DialogTitle>Create Lobby</DialogTitle>
+                                    <DialogDescription>
+                                        In order to create a new lobby, please fill out the form below.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="lobbyName" className="text-right">
+                                            Lobby Name
+                                        </Label>
+                                        <Input
+                                            id="lobbyName"
+                                            className="col-span-3"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="rankName" className="text-right">
+                                            Rank
+                                        </Label>
+                                        <Select onValueChange={(value) => setSelectedRank(value)}>
+                                            <SelectTrigger className="w-[280px]">
+                                                <SelectValue placeholder="Select a rank"/>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Ranks</SelectLabel>
+                                                    <SelectItem value="Herald">Herald</SelectItem>
+                                                    <SelectItem value="Guardian">Guardian</SelectItem>
+                                                    <SelectItem value="Crusader">Crusader</SelectItem>
+                                                    <SelectItem value="Archon">Archon</SelectItem>
+                                                    <SelectItem value="Legend">Legend</SelectItem>
+                                                    <SelectItem value="Ancient">Ancient</SelectItem>
+                                                    <SelectItem value="Divine">Divine</SelectItem>
+                                                    <SelectItem value="Immortal">Immortal</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <Button onClick={handleCreateLobby}
+                                            className={"bg-black text-white"}>Create</Button>
+                                    <Button onClick={closeCreateLobbyDialog}>Close</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>*/}
                         <Dialog open={isCreateLobbyDialogOpen} onOpenChange={setIsCreateLobbyDialogOpen}>
                             <DialogTrigger asChild>
                                 <Button className="flex-none" onClick={openCreateLobbyDialog}>
@@ -223,23 +291,37 @@ export default function DataTableDemo() {
                                         <Label htmlFor="rankName" className="text-right">
                                             Rank
                                         </Label>
-                                        <Input
-                                            id="rankName"
-                                            className="col-span-3"
-                                        />
+                                        <Select onValueChange={(value) => setSelectedRank(value)}>
+                                            <SelectTrigger className="w-[280px]">
+                                                <SelectValue placeholder="Select a rank"/>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Ranks</SelectLabel>
+                                                    <SelectItem value="Herald">Herald</SelectItem>
+                                                    <SelectItem value="Guardian">Guardian</SelectItem>
+                                                    <SelectItem value="Crusader">Crusader</SelectItem>
+                                                    <SelectItem value="Archon">Archon</SelectItem>
+                                                    <SelectItem value="Legend">Legend</SelectItem>
+                                                    <SelectItem value="Ancient">Ancient</SelectItem>
+                                                    <SelectItem value="Divine">Divine</SelectItem>
+                                                    <SelectItem value="Immortal">Immortal</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </div>
                                 <DialogFooter>
-                                    <Button onClick={closeCreateLobbyDialog}
+                                    <Button onClick={handleCreateLobby}
                                             className={"bg-black text-white"}>Create</Button>
-                                    <Button onClick={closeCreateLobbyDialog}
-                                            className={"bg-red-700 text-white"}>Cancel</Button>
+                                    <Button onClick={closeCreateLobbyDialog}>Close</Button>
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
                     </div>
 
                 </div>
+                {/*Show number of rows*/}
                 <div className={"text-zinc-500 mb-1 text-center justify-center mt-4 text-sm"}>
                     {(() => {
                         const text = `${numberOfRows} of ${totalNumberofRows} rows`;
@@ -261,13 +343,13 @@ export default function DataTableDemo() {
             <div className={"text-black"}>
                 <ScrollArea className={"h-192"}>
                     <div>
-                    <Table>
+                        <Table>
                             <TableHeader>
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
                                         {headerGroup.headers.map((header) => (
                                             <TableHead
-                                                className="text-blue-600 text-left" // Changed text alignment to left
+                                                className="text-black" // Changed text alignment to left
                                                 key={header.id}
                                             >
                                                 {header.isPlaceholder
@@ -284,7 +366,7 @@ export default function DataTableDemo() {
                             <TableBody>
                                 {table.getRowModel().rows?.length ? (
                                     table.getRowModel().rows.map((row) => (
-                                        <TableRow key={row.id}>
+                                        <TableRow className={"hover:bg-blue-500"} key={row.id}>
                                             {row.getVisibleCells().map((cell) => (
                                                 <TableCell key={cell.id}>
                                                     {flexRender(
@@ -314,15 +396,14 @@ export default function DataTableDemo() {
             <div className={"flex items-center justify-end space-x-2 py-4"}>
                 <div className={"space-x-2"}>
                     <Button
-                        variant="outline"
-                        size="sm"
+                        className="bg-black text-white hover:bg-blue-800"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
                         Previous
                     </Button>
                     <Button
-                        className="bg-blue-600 text-black hover:bg-blue-800 hover:text-white"
+                        className="bg-black text-white hover:bg-blue-600 hover:text-white"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >

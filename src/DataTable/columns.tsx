@@ -1,26 +1,34 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { Lobby } from "./data.tsx";
-import { Button } from "../components/ui/button.tsx";
-import { ArrowUpDown } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog.tsx";
-import { useNavigate} from "react-router-dom";
+import {ColumnDef} from "@tanstack/react-table";
+import {Lobby} from "./data.tsx";
+import {Button} from "../components/ui/button.tsx";
+import {ArrowUpDown} from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "../components/ui/dialog.tsx";
+import {useNavigate} from "react-router-dom";
 
 export const columns: ColumnDef<Lobby>[] = [
     {
         accessorKey: "Lobby_Id",
-        header: ({ column }) => {
+        header: ({column}) => {
             return (
                 <div className="w-16 bg-white"> {/* Set a fixed width or use a smaller width value */}
                     <Button className={"text-lg bg-white hover:bg-white text-black hover:text-black"}
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
                         Lobby_Id
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <ArrowUpDown className="ml-2 h-4 w-4"/>
                     </Button>
                 </div>
             );
         },
-        cell: ({ row }) => (
+        cell: ({row}) => (
             <div className="w-24 text-lg"> {/* Apply the same width to the cell content */}
                 {row.getValue("Lobby_Id")}
             </div>
@@ -29,41 +37,72 @@ export const columns: ColumnDef<Lobby>[] = [
 
     {
         accessorKey: "Lobby_Name",
-        header: () => {
+        header: ({column}) => {
             return (
-                <div className="text-lg">
+                <Button className={"text-lg bg-white hover:bg-white text-black hover:text-black"}
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
                     Lobby Name
-                </div>
+                    <ArrowUpDown className="ml-2 h-4 w-4"/>
+                </Button>
             );
         },
-        cell: ({ row }) => (
+        cell: ({row}) => (
             <div className="text-lg text-left">
                 {row.getValue("Lobby_Name")}
             </div>
         ),
     },
     {
-      accessorKey :"Rank",
-        header: () => {
+        accessorKey: "Rank",
+        header: ({column}) => {
             return (
-                <div className="text-lg w-24">
+                <Button className={"text-lg bg-white hover:bg-white text-black hover:text-black"}
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
                     Rank
-                </div>
+                    <ArrowUpDown className="ml-2 h-4 w-4"/>
+                </Button>
             );
         },
-      cell: ({ row }) => {
-          return <div className={"text-lg text-left"}>{row.getValue("Rank")}</div>
-      },
+        cell: ({row}) => {
+            return <div className={"text-lg text-left"}>{row.getValue("Rank")}</div>
+        },
         filterFn: (row, columnId, value) => {
             return row.getValue(columnId).toString().toLowerCase().includes(value.toLowerCase());
         },
     },
     {
-        accessorKey: "Members",
-        header: () => {
-            return (<div className={"text-lg text-center"}>Members</div>)
+        accessorKey: "Host",
+        header: ({column}) => {
+            return (
+                <div className="text-lg"> Host</div>
+            )
         },
-        cell: ({ row }) => {
+        cell: ({row}) => {
+            const members = row.original.Members;
+            const owner = members.find((member: Member) => member.user_owner);
+            return (
+                <div className="text-lg text-center">
+                    <div>{owner ? owner.user_id : "None"}</div>
+                    <div>{owner?.user_role}</div>
+                </div>
+            )
+        },
+    },
+    {
+        accessorKey: "Members",
+        header: ({column}) => {
+            return (
+                <Button className={"text-lg bg-white hover:bg-white text-black hover:text-black"}
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Members
+                    <ArrowUpDown className="ml-2 h-4 w-4"/>
+                </Button>
+            )
+        },
+        cell: ({row}) => {
             const members = row.original.Members;
             return (
                 <ul className={"text-left text-blue-900"}>
@@ -72,7 +111,6 @@ export const columns: ColumnDef<Lobby>[] = [
                     {/*    <li key={index}>*/}
                     {/*        {member.user_role} {member.user_owner ? <b>({member.user_id})</b> : `(${member.user_id})`}*/}
                     {/*    </li>*/}
-
                     {/*))}*/}
                 </ul>
             );
@@ -84,20 +122,21 @@ export const columns: ColumnDef<Lobby>[] = [
     {
         id: "Join",
         enableHiding: false,
-        header:() =>{
+        header: () => {
             return (
                 <div className={"text-lg text-center"}>
                     Join Lobby
                 </div>
             )
         },
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const navigate = useNavigate();
             return (
                 <div className={"text-center p-0"}>
-                    <Dialog >
+                    <Dialog>
                         <DialogTrigger asChild>
-                            <Button className={" text-lg w-36 h-12 bg-blue-500 p-2 m-0 radius-3xl"}>
+                            <Button
+                                className={"border-2 border-blue-950 text-lg w-36 h-12 bg-blue-500 p-2 m-0 radius-3xl"}>
                                 Join Lobby
                             </Button>
                         </DialogTrigger>

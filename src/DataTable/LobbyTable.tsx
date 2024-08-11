@@ -10,14 +10,14 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table";
-import { Button } from "../components/ui/button.tsx";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.tsx";
-import { useLobbies } from '../LobbyContext'; // Use centralized state for lobbies
-import { columns } from "./columns.tsx";
-import { ScrollArea } from "../components/ui/scroll-area.tsx";
-import { Label } from "../components/ui/label.tsx";
-import { Input } from "../components/ui/input.tsx";
-import { RefreshCw } from 'lucide-react';
+import {Button} from "../components/ui/button.tsx";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../components/ui/table.tsx";
+import {useLobbies} from '../LobbyContext'; // Use centralized state for lobbies
+import {columns} from "./columns.tsx";
+import {ScrollArea} from "../components/ui/scroll-area.tsx";
+import {Label} from "../components/ui/label.tsx";
+import {Input} from "../components/ui/input.tsx";
+import {RefreshCw} from 'lucide-react';
 import {
     Select,
     SelectContent,
@@ -45,18 +45,15 @@ export default function DataTableDemo() {
     const [rowSelection, setRowSelection] = React.useState({});
     const [isFilterDialogOpen, setIsFilterDialogOpen] = React.useState(false);
     const [isCreateLobbyDialogOpen, setIsCreateLobbyDialogOpen] = React.useState(false);
-    const { lobbies, addLobby } = useLobbies(); // Get lobbies and addLobby function from context
+    const {lobbies, addLobby} = useLobbies();
     const [selectedRank, setSelectedRank] = React.useState<string>('');
     const [selectedRole, setSelectedRole] = React.useState<string>('');
-
-    const handleCreateLobby = () => {
-        const lobbyName = document.getElementById('lobbyName').value;
-        const rankName = selectedRank;
-
+    const [createLobbyName, setCreateLobbyName] = React.useState('');
+    const handleCreateLobby = () => {;
         const newLobby = {
             Lobby_Id: lobbies.length + 1,
-            Lobby_Name: lobbyName,
-            Rank: rankName,
+            Lobby_Name: createLobbyName,
+            Rank: selectedRank,
             Members: [
                 {
                     user_id: Date.now(),
@@ -79,13 +76,15 @@ export default function DataTableDemo() {
     const openFilterDialog = () => {
         setIsCreateLobbyDialogOpen(false); // Ensure the other dialog is closed
         setIsFilterDialogOpen(true);
+        setSelectedRank('');
+        setSelectedRole('');
     };
     const closeFilterDialog = () => setIsFilterDialogOpen(false);
 
     const handleApplyFilter = () => {
         setColumnFilters([
-            { id: 'Rank', value: selectedRank },
-            { id: 'Members', value: selectedRole }
+            {id: 'Rank', value: selectedRank},
+            {id: 'Members', value: selectedRole}
         ]);
         closeFilterDialog();
     };
@@ -153,56 +152,57 @@ export default function DataTableDemo() {
                                 <DialogHeader>
                                     <DialogTitle>Filter Options</DialogTitle>
                                 </DialogHeader>
-                                <DialogDescription>
-                                    <div></div>
-                                    <div className="grid gap-4 py-4 justify-center">
-                                        {/*--Selecting Player Rank--*/}
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="lobbyName" className="text-right">
-                                                Rank
-                                            </Label>
-                                            <Select onValueChange={(value) => setSelectedRank(value)}>
-                                                <SelectTrigger className="w-[280px]">
-                                                    <SelectValue placeholder="Select a rank"/>
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectGroup>
-                                                        <SelectLabel>Ranks</SelectLabel>
-                                                        <SelectItem value="Herald">Herald</SelectItem>
-                                                        <SelectItem value="Guardian">Guardian</SelectItem>
-                                                        <SelectItem value="Crusader">Crusader</SelectItem>
-                                                        <SelectItem value="Archon">Archon</SelectItem>
-                                                        <SelectItem value="Legend">Legend</SelectItem>
-                                                        <SelectItem value="Ancient">Ancient</SelectItem>
-                                                        <SelectItem value="Divine">Divine</SelectItem>
-                                                        <SelectItem value="Immortal">Immortal</SelectItem>
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                        {/*--Selecting Player Role--*/}
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="rankName" className="text-right">
-                                                Player Roles
-                                            </Label>
-                                            <Select onValueChange={(value => setSelectedRole(value))}>
-                                                <SelectTrigger className="w-[280px]">
-                                                    <SelectValue placeholder="Select a role"/>
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectGroup>
-                                                        <SelectLabel>Roles</SelectLabel>
-                                                        <SelectItem value="Carry">Carry</SelectItem>
-                                                        <SelectItem value="Midlaner">Midlaner</SelectItem>
-                                                        <SelectItem value="Offlaner">Offlaner</SelectItem>
-                                                        <SelectItem value="Soft Support">Soft Support</SelectItem>
-                                                        <SelectItem value="Hard Support">Hard Support</SelectItem>
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
+                                <div className="grid gap-4 py-4 justify-center">
+                                    {/*--Selecting Player Rank--*/}
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="lobbyRank" className="text-right">
+                                            Rank
+                                        </Label>
+                                        <Select
+                                            onValueChange={(value) => setSelectedRank(value)}>
+                                            <SelectTrigger className="w-[280px]">
+                                                <SelectValue placeholder="Select a rank"/>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Ranks</SelectLabel>
+                                                    <SelectItem value="Herald">Herald</SelectItem>
+                                                    <SelectItem value="Guardian">Guardian</SelectItem>
+                                                    <SelectItem value="Crusader">Crusader</SelectItem>
+                                                    <SelectItem value="Archon">Archon</SelectItem>
+                                                    <SelectItem value="Legend">Legend</SelectItem>
+                                                    <SelectItem value="Ancient">Ancient</SelectItem>
+                                                    <SelectItem value="Divine">Divine</SelectItem>
+                                                    <SelectItem value="Immortal">Immortal</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
-                                </DialogDescription>
+                                    {/*--Selecting Player Role--*/}
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="rankName" className="text-right">
+                                            Player Roles
+                                        </Label>
+                                        <Select onValueChange={(value => setSelectedRole(value))}>
+                                            <SelectTrigger className="w-[280px]">
+                                                <SelectValue placeholder="Select a role"/>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Roles</SelectLabel>
+                                                    <SelectItem value="Carry">Carry</SelectItem>
+                                                    <SelectItem value="Midlaner">Midlaner</SelectItem>
+                                                    <SelectItem value="Offlaner">Offlaner</SelectItem>
+                                                    <SelectItem value="Soft Support">Soft Support</SelectItem>
+                                                    <SelectItem value="Hard Support">Hard Support</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <Label>{selectedRole}</Label>
+                                    <Label>{selectedRank}</Label>
+                                </div>
+
                                 <DialogFooter>
                                     <Button onClick={handleApplyFilter}>Apply</Button>
                                     <Button onClick={closeFilterDialog}>Cancel</Button>
@@ -225,11 +225,11 @@ export default function DataTableDemo() {
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="lobbyName" className="text-right">
+                                        <Label htmlFor="createLobbyName" className="text-right">
                                             Lobby Name
                                         </Label>
                                         <Input
-                                            id="lobbyName"
+                                            id="createLobbyName"
                                             className="col-span-3"
                                         />
                                     </div>
@@ -284,6 +284,8 @@ export default function DataTableDemo() {
                                         </Label>
                                         <Input
                                             id="lobbyName"
+                                            defaultValue={createLobbyName}
+                                            onChange={(e) => setCreateLobbyName(e.target.value)}
                                             className="col-span-3"
                                         />
                                     </div>
@@ -291,13 +293,16 @@ export default function DataTableDemo() {
                                         <Label htmlFor="rankName" className="text-right">
                                             Rank
                                         </Label>
-                                        <Select onValueChange={(value) => setSelectedRank(value)}>
+                                        <Select
+                                            onValueChange={(value) => setSelectedRank(value || '')}
+                                            onOpenChange={(isOpen) => !isOpen && setSelectedRank('')}>
                                             <SelectTrigger className="w-[280px]">
                                                 <SelectValue placeholder="Select a rank"/>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Ranks</SelectLabel>
+                                                    <SelectItem value="">None</SelectItem> {/* Reset option */}
                                                     <SelectItem value="Herald">Herald</SelectItem>
                                                     <SelectItem value="Guardian">Guardian</SelectItem>
                                                     <SelectItem value="Crusader">Crusader</SelectItem>
@@ -309,6 +314,7 @@ export default function DataTableDemo() {
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
+
                                     </div>
                                 </div>
                                 <DialogFooter>
@@ -324,16 +330,16 @@ export default function DataTableDemo() {
                 {/*Show number of rows*/}
                 <div className={"text-zinc-500 mb-1 text-center justify-center mt-4 text-sm"}>
                     {(() => {
-                        const text = `${numberOfRows} of ${totalNumberofRows} rows`;
+                        const text = `${numberOfRows} of ${totalNumberofRows} lobbies found`;
 
                         if (selectedRank === '' && selectedRole === '') {
                             return text;
                         } else if (selectedRank !== '' && selectedRole === '') {
                             return `${text} for the rank ${selectedRank}`;
                         } else if (selectedRank === '' && selectedRole !== '') {
-                            return `${text} for the role ${selectedRole}`;
+                            return `${text} with the missing role of ${selectedRole}`;
                         } else {
-                            return `${text} for the rank ${selectedRank} and role ${selectedRole}`;
+                            return `${text} for the rank ${selectedRank}, with the missing role of ${selectedRole}`;
                         }
                     })()}
                 </div>

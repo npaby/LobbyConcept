@@ -91,6 +91,24 @@ export const dataColumns: ColumnDef<Lobby>[] = [
         },
     },
     {
+        accessorKey: "Rank/Members",
+        header: ({column}) => {
+            return (
+                <div className="text-lg text-center">Rank/Members</div>
+            )
+        },
+        cell: ({row}) => {
+            const members = row.original.Members;
+            const owner = members.find((member: Member) => member.user_owner);
+            return (
+                <div className={"text-center"}>
+                    <div className={"text-lg"}>{row.getValue("Rank")}</div>
+                    <div className={"text-lg"} key={"empty"}>{members.length}/5</div>
+                </div>
+            )
+        },
+    },
+    {
         accessorKey: "Members",
         header: ({column}) => {
             return (

@@ -5,9 +5,32 @@ import {dataColumns} from "./DataColumns.tsx";
 import * as React from "react";
 
 export default function DataTable({table: table}) {
+    {/*--Data table is responsive--*/}
+    React.useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+
+                table.setColumnVisibility({
+                    Lobby_Id: false,
+                    Host: false,
+                    Rank: false,
+                    Members:false,
+                    Test:true,
+                });
+            } else {
+                table.setColumnVisibility({
+                    Test:false,
+                });
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
     return (
         <div className={"text-black"}>
-            <ScrollArea className={"h-192"}>
+            <ScrollArea className={"h-192 w-full"}>
                 <div>
                     <Table>
                         <TableHeader>

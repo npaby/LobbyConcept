@@ -81,12 +81,13 @@ export default function DataFilteringHeader({ table }) {
 
     return (
         <div className="text-left text-lg m-2">
+
             {/*--Container--*/}
-            <div className={"flex flex-row"}>
+            <div className={"flex flex-row flex-wrap"}>
                 {/*--Filtering through lobby name--*/}
-                <div className={"flex flex-row space-x-4 w-1/2"}>
+                <div className="flex flex-row space-x-4 w-full md:w-1/2">
                     <Input
-                        className="flex-1 w-24"
+                        className="flex-1 min-w-[120px] w-24"
                         type="text"
                         value={(table.getColumn("Lobby_Name")?.getFilterValue() as string) ?? ""}
                         onChange={(event) =>
@@ -94,13 +95,14 @@ export default function DataFilteringHeader({ table }) {
                         }
                         placeholder="Enter Lobby Name"
                     />
-                    <Button className="flex-none">Search</Button>
+                    <Button className="flex-none hover:bg-gray-700 focus:bg-gray-700">
+                        Search
+                    </Button>
                 </div>
                 {/*--Organize buttons--*/}
-                <div className="flex flex-row space-x-4 justify-end ml-auto">
-                    {/*--//TODO:For refresing the database--*/}
-                    <Button className="flex-none">
-                        <RefreshCw className="flex-none" size={18} />
+                <div className="flex flex-row space-x-2 justify-end ml-auto mt-2 md:mt-0">
+                    <Button className="flex-none hover:bg-gray-700 focus:bg-gray-700">
+                        <RefreshCw className="flex-none" size={18}/>
                     </Button>
                     {/*--This is for filtering the table using preferences--*/}
                     {/*--//TODO: Filter not returning to empty state after closing the dialog with no selected rank/role--*/}
@@ -122,7 +124,7 @@ export default function DataFilteringHeader({ table }) {
                                     </Label>
                                     <Select onValueChange={(value) => setSelectedRank(value)}>
                                         <SelectTrigger className="w-[280px]">
-                                            <SelectValue placeholder="Select a rank" />
+                                            <SelectValue placeholder="Select a rank"/>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
@@ -146,7 +148,7 @@ export default function DataFilteringHeader({ table }) {
                                     </Label>
                                     <Select onValueChange={(value) => setSelectedRole(value)}>
                                         <SelectTrigger className="w-[280px]">
-                                            <SelectValue placeholder="Select a role" />
+                                            <SelectValue placeholder="Select a role"/>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
@@ -163,8 +165,10 @@ export default function DataFilteringHeader({ table }) {
                             </div>
 
                             <DialogFooter>
-                                <Button onClick={handleApplyFilter}>Apply</Button>
-                                <Button onClick={closeFilterDialog}>Cancel</Button>
+                                <div className={"flex flex-row flex-wrap gap-4 justify-end"}>
+                                    <Button onClick={handleApplyFilter}>Apply</Button>
+                                    <Button onClick={closeFilterDialog}>Cancel</Button>
+                                </div>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -191,7 +195,7 @@ export default function DataFilteringHeader({ table }) {
                                         id="lobbyName"
                                         value={createLobbyName}
                                         onChange={(e) => setCreateLobbyName(e.target.value)}
-                                        className="col-span-3"
+                                        className="w-[280px]"
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
@@ -200,7 +204,7 @@ export default function DataFilteringHeader({ table }) {
                                     </Label>
                                     <Select onValueChange={(value) => setSelectedRank(value)}>
                                         <SelectTrigger className="w-[280px]">
-                                            <SelectValue placeholder="Select a rank" />
+                                            <SelectValue placeholder="Select a rank"/>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
@@ -219,10 +223,12 @@ export default function DataFilteringHeader({ table }) {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button onClick={handleCreateLobby} className={"bg-black text-white"}>
-                                    Create
-                                </Button>
-                                <Button onClick={closeCreateLobbyDialog}>Close</Button>
+                                <div className={"flex flex-row flex-wrap gap-4 justify-end"}>
+                                    <Button onClick={handleCreateLobby} className={"bg-black text-white"}>
+                                        Create
+                                    </Button>
+                                    <Button onClick={closeCreateLobbyDialog}>Close</Button>
+                                </div>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>

@@ -70,8 +70,9 @@ export default function DataFilteringHeader({ table }) {
             { id: 'Rank', value: selectedRank },
             { id: 'Members', value: selectedRole }
         ]);
-        console.log(table.getFilteredRowModel());
-
+        console.log("Filtering now");
+        const filteredRows = table.getFilteredRowModel().rows.map(row => row.original);
+        console.log(filteredRows);
         closeFilterDialog();
     };
 
@@ -80,11 +81,6 @@ export default function DataFilteringHeader({ table }) {
 
     return (
         <div className="text-left text-lg m-2">
-            <div className="mb-5">
-                <Label className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                    Lobbies
-                </Label>
-            </div>
             {/*--Container--*/}
             <div className={"flex flex-row"}>
                 {/*--Filtering through lobby name--*/}
@@ -107,6 +103,7 @@ export default function DataFilteringHeader({ table }) {
                         <RefreshCw className="flex-none" size={18} />
                     </Button>
                     {/*--This is for filtering the table using preferences--*/}
+                    {/*--//TODO: Filter not returning to empty state after closing the dialog with no selected rank/role--*/}
                     <Dialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen}>
                         <DialogTrigger asChild>
                             <Button className="flex-none" onClick={openFilterDialog}>

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { dummyLobbies as initialData } from "./DataTable/data";
+import { dummyLobbies as initialData } from "./DataTableView/DataRows.tsx";
 
 const LobbyContext = createContext();
 

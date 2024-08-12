@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LobbyTable from "./DataTable/LobbyTable.tsx";
+import LobbyTable from "./LobbyView.tsx";
 import LobbyPage from "./LobbyPage.tsx";
 
 function AppRoutes() {

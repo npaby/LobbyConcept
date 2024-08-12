@@ -1,5 +1,5 @@
 import {ColumnDef} from "@tanstack/react-table";
-import {Lobby} from "./data.tsx";
+import {Lobby} from "./DataRows.tsx";
 import {Button} from "../components/ui/button.tsx";
 import {ArrowUpDown} from "lucide-react";
 import {
@@ -13,7 +13,7 @@ import {
 } from "../components/ui/dialog.tsx";
 import {useNavigate} from "react-router-dom";
 
-export const columns: ColumnDef<Lobby>[] = [
+export const dataColumns: ColumnDef<Lobby>[] = [
     {
         accessorKey: "Lobby_Id",
         header: ({column}) => {

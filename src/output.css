@@ -701,6 +701,10 @@ body {
   margin-bottom: 0.25rem;
 }
 
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .mb-5 {
   margin-bottom: 1.25rem;
 }
@@ -723,6 +727,14 @@ body {
 
 .mt-6 {
   margin-top: 1.5rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
 }
 
 .flex {
@@ -789,6 +801,10 @@ body {
   height: 1rem;
 }
 
+.h-44 {
+  height: 11rem;
+}
+
 .h-9 {
   height: 2.25rem;
 }
@@ -807,6 +823,22 @@ body {
 
 .h-px {
   height: 1px;
+}
+
+.h-\[80lvh\] {
+  height: 80lvh;
+}
+
+.h-\[20lvh\] {
+  height: 20lvh;
+}
+
+.h-\[60lvh\] {
+  height: 60lvh;
+}
+
+.h-\[70lvh\] {
+  height: 70lvh;
 }
 
 .max-h-96 {
@@ -877,6 +909,10 @@ body {
   width: 100%;
 }
 
+.w-12 {
+  width: 3rem;
+}
+
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
@@ -939,6 +975,22 @@ body {
 
 .grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid-cols-\[auto_1fr\] {
+  grid-template-columns: auto 1fr;
+}
+
+.grid-cols-\[100px_auto\] {
+  grid-template-columns: 100px auto;
+}
+
+.grid-cols-\[minmax\(50px\2c auto\)_1fr\] {
+  grid-template-columns: minmax(50px,auto) 1fr;
+}
+
+.grid-cols-\[minmax\(50px\)_1fr\] {
+  grid-template-columns: minmax(50px) 1fr;
 }
 
 .grid-rows-1 {
@@ -1181,6 +1233,10 @@ body {
   padding: 1px;
 }
 
+.p-10 {
+  padding: 2.5rem;
+}
+
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -1276,6 +1332,11 @@ body {
   line-height: 2rem;
 }
 
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
 .text-4xl {
   font-size: 2.25rem;
   line-height: 2.5rem;
@@ -1294,6 +1355,10 @@ body {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.font-black {
+  font-weight: 900;
 }
 
 .font-bold {
@@ -1341,6 +1406,11 @@ body {
 
 .text-current {
   color: currentColor;
+}
+
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
 .text-muted-foreground {
@@ -1943,7 +2013,17 @@ body {
   }
 }
 
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (min-width: 1024px) {
+  .lg\:grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
   .lg\:text-5xl {
     font-size: 3rem;
     line-height: 1;

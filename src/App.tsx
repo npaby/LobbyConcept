@@ -1,7 +1,7 @@
 import './App.css';
 import AppRoutes from "./AppRoutes.tsx";
 import { ThemeProvider } from "./components/theme-provider";
-import { LobbyProvider } from "./LobbyContext";
+import { LobbyProvider } from "./old/LobbyContext.tsx";
 function App() {
     return (
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">

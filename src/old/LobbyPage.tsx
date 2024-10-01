@@ -1,8 +1,8 @@
 import {useParams} from "react-router-dom";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "./components/ui/card";
-import {ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger,} from "./components/ui/context-menu";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../components/ui/card.tsx";
+import {ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger,} from "../components/ui/context-menu.tsx";
 
-import {Button} from "./components/ui/button";
+import {Button} from "../components/ui/button.tsx";
 import {
     Dialog,
     DialogContent,
@@ -10,11 +10,11 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "./components/ui/dialog";
+} from "../components/ui/dialog.tsx";
 import {useState} from "react";
-import {ScrollArea} from "./components/ui/scroll-area";
-import {Textarea} from "./components/ui/textarea"
-import {useLobbies} from "./LobbyContext";
+import {ScrollArea} from "../components/ui/scroll-area.tsx";
+import {Textarea} from "../components/ui/textarea.tsx"
+import {useLobbies} from "./LobbyContext.tsx";
 
 export default function LobbyPage() {
     const {lobbyId} = useParams();

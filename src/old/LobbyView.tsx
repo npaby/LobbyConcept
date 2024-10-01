@@ -14,7 +14,7 @@ import {useLobbies} from "./LobbyContext.tsx";
 import DataFilteringHeader from "./DataTableView/DataFilteringHeader.tsx";
 import DataTablePagination from "./DataTableView/DataTablePagination.tsx";
 import DataTable from "./DataTableView/DataTable.tsx";
-import {Label} from "./components/ui/label.tsx";
+import {Label} from "../components/ui/label.tsx";
 import {
     Select,
     SelectContent,
@@ -23,7 +23,7 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue
-} from "./components/ui/select.tsx";
+} from "../components/ui/select.tsx";
 import CardView from "./CardView.tsx";
 export default function DataTableDemo() {
     // Managing the state of the table

@@ -1,6 +1,6 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {Lobby} from "./DataRows.tsx";
-import {Button} from "../components/ui/button.tsx";
+import {Button} from "../../components/ui/button.tsx";
 import {ArrowUpDown} from "lucide-react";
 import {
     Dialog,
@@ -10,7 +10,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger
-} from "../components/ui/dialog.tsx";
+} from "../../components/ui/dialog.tsx";
 import {useNavigate} from "react-router-dom";
 
 export const dataColumns: ColumnDef<Lobby>[] = [

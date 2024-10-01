@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {Card, CardContent, CardHeader, CardTitle,} from "./components/ui/card";
-import {Button} from "./components/ui/button";
+import {Card, CardContent, CardHeader, CardTitle,} from "../components/ui/card.tsx";
+import {Button} from "../components/ui/button.tsx";
 import {useNavigate} from "react-router-dom";
-import {ScrollArea} from "./components/ui/scroll-area";
-import {Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose, DialogTrigger, DialogHeader} from "./components/ui/dialog";
+import {ScrollArea} from "../components/ui/scroll-area.tsx";
+import {Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose, DialogTrigger, DialogHeader} from "../components/ui/dialog.tsx";
 const CardView = ({table}) => {
     const filteredRows = table.getPaginationRowModel().rows;
     const navigate = useNavigate();
@@ -90,16 +90,6 @@ const CardView = ({table}) => {
                                 <div className="text-sm m-2 text-gray-500">{lobby.Lobby_Id}</div>
                             </CardHeader>
                             <CardContent>
-                                {/*
-                                <CardDescription>
-                                    <div className="text-3xl text font-black">
-                                        {lobby.Lobby_Id}
-                                    </div>
-                                    <div className={"mt-8 h-44 "}>
-                                        {renderMembers(lobby.Members)}
-                                    </div>
-                                </CardDescription>
-                                */}
                                 <div className="text-3xl text font-black">
                                     {lobby.Rank}
                                 </div>

@@ -1,6 +1,6 @@
-import { Label } from "../components/ui/label.tsx";
-import { Input } from "../components/ui/input.tsx";
-import { Button } from "../components/ui/button.tsx";
+import { Label } from "../../components/ui/label.tsx";
+import { Input } from "../../components/ui/input.tsx";
+import { Button } from "../../components/ui/button.tsx";
 import { RefreshCw } from "lucide-react";
 import {
     Dialog,
@@ -10,7 +10,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../components/ui/dialog.tsx";
+} from "../../components/ui/dialog.tsx";
 import {
     Select,
     SelectContent,
@@ -19,7 +19,7 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "../components/ui/select.tsx";
+} from "../../components/ui/select.tsx";
 import * as React from "react";
 import { useLobbies } from "../LobbyContext.tsx";
 

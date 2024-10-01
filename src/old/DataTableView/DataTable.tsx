@@ -1,5 +1,5 @@
-import {ScrollArea} from "../components/ui/scroll-area.tsx";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../components/ui/table.tsx";
+import {ScrollArea} from "../../components/ui/scroll-area.tsx";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../components/ui/table.tsx";
 import {flexRender} from "@tanstack/react-table";
 import {dataColumns} from "./DataColumns.tsx";
 import * as React from "react";

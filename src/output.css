@@ -697,6 +697,10 @@ body {
   margin-bottom: 0.25rem;
 }
 
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
 .mb-5 {
   margin-bottom: 1.25rem;
 }
@@ -723,14 +727,6 @@ body {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
 }
 
 .inline-block {
@@ -831,10 +827,6 @@ body {
 
 .h-px {
   height: 1px;
-}
-
-.h-20 {
-  height: 5rem;
 }
 
 .max-h-96 {

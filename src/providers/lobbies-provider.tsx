@@ -68,7 +68,7 @@ export const LobbiesProvider = ({ children }) => {
 	}, [lobbies]);
 	// Todo: Create Create-Lobby DTO here.
 	const createLobby = (lobbyData) => {
-		socket.emit("lobby:createLobby", { roomName: "Test Lang" });
+		socket.emit("lobby:createLobby", lobbyData);
 	};
 	const joinLobby = (lobbyId) => {
 		socket.emit("lobby:joinLobby", lobbyId);

@@ -19,11 +19,11 @@ const getUserData = async () => {
 	}
 };
 export const AuthProvider = ({ children }) => {
-	// Initialize authentication state
-	const [isAuthenticated, setIsAuthenticated] = useState(null); // null for loading state
+	// Initialize authentication state to nukll to prevent from redirecting to login page
+	const [isAuthenticated, setIsAuthenticated] = useState(null);
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [cookies] = useCookies();
-	const [storedValue, setStoredValue] = useLocalStorage("userData", null); // moved inside the component
+	const [storedValue, setStoredValue] = useLocalStorage("userData", null);
 	const login = () => setIsAuthenticated(true);
 	const logout = () => {
 		setIsAuthenticated(false);
@@ -45,9 +45,6 @@ export const AuthProvider = ({ children }) => {
 		} else {
 			setIsAdmin(false);
 		}
-	}, [cookies]);
-
-	useEffect(() => {
 		const fetchUserData = async () => {
 			if (isAuthenticated) {
 				const data = await getUserData();
@@ -56,12 +53,14 @@ export const AuthProvider = ({ children }) => {
 				}
 			}
 		};
-
+		console.log("Fetching user data");
 		fetchUserData();
-	}, [isAuthenticated, setStoredValue]);
+	}, [cookies, isAuthenticated]);
 
 	return (
-		<AuthContext.Provider value={{ isAuthenticated, isAdmin, login, logout }}>
+		<AuthContext.Provider
+			value={{ isAuthenticated, storedValue, isAdmin, login, logout }}
+		>
 			{children}
 		</AuthContext.Provider>
 	);

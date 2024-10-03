@@ -36,10 +36,9 @@ export const LobbiesProvider = ({ children }) => {
 			);
 		});
 		return () => {
-			// socket.disconnect();
-			// socket.off("connect");
-			// socket.off("lobby:getLobbies");
-			// socket.off("lobby:createLobby");
+			socket.off("connect");
+			socket.off("lobby:getLobbies");
+			socket.off("lobby:createLobby");
 		};
 	}, [cookies.accessToken]);
 	useEffect(() => {
@@ -65,6 +64,10 @@ export const LobbiesProvider = ({ children }) => {
 				),
 			);
 		});
+		return () => {
+			socket.off("lobby:createLobby");
+			socket.off("lobby:joinLobby");
+		};
 	}, [lobbies]);
 	// Todo: Create Create-Lobby DTO here.
 	const createLobby = (lobbyData) => {

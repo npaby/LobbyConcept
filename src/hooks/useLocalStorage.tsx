@@ -1,4 +1,4 @@
-// Todo: For session handling, if user is within lobby. Useful for saving relevant datas.
+// [Done] For session handling, if user is within lobby. Useful for saving relevant datas.
 
 import { useState } from "react";
 

@@ -30,33 +30,35 @@ export const AuthProvider = ({ children }) => {
 		setIsAdmin(false);
 		setStoredValue(null);
 	};
-
 	useEffect(() => {
-		if (cookies.accessToken && cookies.refreshToken) {
-			console.log("Access token and refresh token found");
-			setIsAuthenticated(true);
-		} else {
-			console.log("No access token or refresh token found");
-			setIsAuthenticated(false);
-		}
+		const checkAuth = () => {
+			if (cookies.accessToken && cookies.refreshToken) {
+				console.log("Access token and refresh token found");
+				setIsAuthenticated(true);
+			} else {
+				console.log("No access token or refresh token found");
+				setIsAuthenticated(false);
+			}
 
-		if (cookies.isAdministrator || cookies.isAdmin) {
-			setIsAdmin(true);
-		} else {
-			setIsAdmin(false);
-		}
+			if (cookies.isAdministrator || cookies.isAdmin) {
+				setIsAdmin(true);
+			} else {
+				setIsAdmin(false);
+			}
+		};
+		checkAuth();
 		const fetchUserData = async () => {
-			if (isAuthenticated) {
+			if (cookies.accessToken && isAuthenticated) {
+				// console.log("Fetching user data");
 				const data = await getUserData();
 				if (data) {
 					setStoredValue(data);
 				}
 			}
 		};
-		console.log("Fetching user data");
 		fetchUserData();
-	}, [cookies, isAuthenticated]);
-
+		return () => {};
+	}, [cookies.accessToken]);
 	return (
 		<AuthContext.Provider
 			value={{ isAuthenticated, storedValue, isAdmin, login, logout }}

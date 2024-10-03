@@ -15,6 +15,7 @@ import { useLobbies } from "../../providers/lobbies-provider.tsx";
 
 export default function LobbiesHeader() {
 	const { createLobby } = useLobbies();
+	const [{ lobbyData }, setLobbyData] = useState({});
 	return (
 		<>
 			<div className="mb-5">

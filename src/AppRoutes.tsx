@@ -12,11 +12,8 @@ function AppRoutes() {
 		<AuthProvider>
 			<BrowserRouter>
 				<Routes>
-					{/* Public Routes */}
 					<Route path="/auth/signup" element={<SignUpPage />} />
 					<Route path="/auth/signin" element={<SignInPage />} />
-
-					{/* Protected Routes */}
 					<Route
 						path="/lobby"
 						element={

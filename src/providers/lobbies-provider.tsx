@@ -64,7 +64,6 @@ export const LobbiesProvider = ({ children }) => {
 						: lobby,
 				),
 			);
-			setCreatedLobby(null);
 		});
 	}, [lobbies]);
 	// Todo: Create Create-Lobby DTO here.

@@ -11,7 +11,7 @@ const LobbiesContext = createContext();
 export const LobbiesProvider = ({ children }) => {
 	const [lobbies, setLobbies] = useState([]);
 	const [createdLobby, setCreatedLobby] = useState(null);
-	const [selectedLobby, setSelectedLobby] = useState(null);
+	const [selectedLobby, setSelectedLobby] = useState("");
 	const navigate = useNavigate();
 	const [cookies, setCookie] = useCookies();
 	const socketCurrent: Socket = useSockets().socket;
@@ -72,20 +72,27 @@ export const LobbiesProvider = ({ children }) => {
 		return () => {
 			socketCurrent.off("lobby:joinLobby");
 		};
-	}, [t]);
+	}, [socketCurrent]);
 	// Todo: Create Create-Lobby DTO here.
 	const createLobby = (lobbyData) => {
 		socketCurrent.emit("lobby:createLobby", lobbyData);
 	};
-	const joinLobby = (lobbyId) => {
-		socketCurrent.emit("lobby:joinLobby", lobbyId);
-
-		setSelectedLobby(lobbyId);
-		navigate(`/lobby/${lobbyId}`);
+	const joinLobby = (lobby) => {
+		socketCurrent.emit("lobby:joinLobby", lobby.lobbyId);
+		console.log("Joined lobby:", lobby);
+		setSelectedLobby(lobby);
+		console.log("Selected lobby:", lobby);
+		navigate(`/lobby/${lobby.lobbyId}`);
 	};
 	return (
 		<LobbiesContext.Provider
-			value={{ lobbies, selectedLobby, createLobby, joinLobby }}
+			value={{
+				lobbies,
+				setSelectedLobby,
+				selectedLobby,
+				createLobby,
+				joinLobby,
+			}}
 		>
 			{children}
 		</LobbiesContext.Provider>

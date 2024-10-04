@@ -11,10 +11,11 @@ import { useSockets } from "../../providers/socket-provider.tsx";
 export default function LobbiesCard({ lobby }) {
 	const { socket } = useSockets();
 	const { joinLobby } = useLobbies();
-	const handleJoinLobby = (lobbyId) => {
+	const handleJoinLobby = (lobby) => {
 		// console.log("Joining lobby:", lobbyId);
-		socket.emit("lobby:joinLobby", lobbyId);
-		joinLobby(lobbyId);
+		socket.emit("lobby:joinLobby", lobby.lobbyId);
+		joinLobby(lobby);
+		navigate(`/lobby/${lobby.lobbyId}`);
 	};
 	return (
 		<Card className="shadow-md h-96" id={lobby.lobbyId}>
@@ -39,7 +40,7 @@ export default function LobbiesCard({ lobby }) {
 				<div className={"mt-4 mb-4"}>{/* RenderMembers */}</div>
 				<Button
 					className="w-full text-white bg-blue-500 hover:bg-blue-600"
-					onClick={() => handleJoinLobby(lobby?.lobbyId)}
+					onClick={() => handleJoinLobby(lobby)}
 				>
 					Join Lobby
 				</Button>

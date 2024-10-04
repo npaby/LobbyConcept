@@ -6,6 +6,7 @@ import LobbyDashboardPage from "./pages/lobbydashboardpage.tsx";
 import LobbyDetailPage from "./pages/lobbydetailpage.tsx";
 import SignInPage from "./pages/signin.tsx";
 import SignUpPage from "./pages/signup.tsx";
+import { LobbiesProvider } from "./providers/lobbies-provider.tsx";
 import { SocketsProvider } from "./providers/socket-provider.tsx";
 // Correct the nesting of Route components
 function AppRoutes() {
@@ -16,7 +17,6 @@ function AppRoutes() {
 					<Routes>
 						<Route path="/auth/signup" element={<SignUpPage />} />
 						<Route path="/auth/signin" element={<SignInPage />} />
-
 						<Route
 							path="/lobby"
 							element={
@@ -29,7 +29,9 @@ function AppRoutes() {
 							path="/lobby/:lobbyId"
 							element={
 								<ProtectedRoute>
-									<LobbyDetailPage />
+									<LobbiesProvider>
+										<LobbyDetailPage />
+									</LobbiesProvider>
 								</ProtectedRoute>
 							}
 						/>

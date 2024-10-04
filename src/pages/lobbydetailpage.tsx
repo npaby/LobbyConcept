@@ -5,24 +5,11 @@ import { useCookies } from "react-cookie";
 import { useLocation } from "react-router-dom";
 import io from "socket.io-client";
 import { Button } from "../components/ui/button.tsx";
+import { useSockets } from "../providers/socket-provider.tsx";
 export default function LobbyDetailPage() {
 	const { lobbyId } = useParams();
 	const [cookies] = useCookies();
-
-	console.log(lobbyId);
-	const socket = io("ws://localhost:3000", {
-		auth: {
-			token: cookies.accessToken,
-		},
-		transports: ["websocket"],
-		upgrade: false,
-	});
-	socket.emit("lobby:getLobby", lobbyId);
-	useEffect(() => {
-		return () => {
-			socket.off("lobby:updateLobby");
-		};
-	}, []);
+	const { socket } = useSockets();
 
 	return (
 		<div className="flex grid-rows-1 gap-3 p-0 m-0">

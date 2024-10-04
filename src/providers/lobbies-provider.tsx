@@ -51,6 +51,14 @@ export const LobbiesProvider = ({ children }) => {
 			console.log("Created lobby ID:", msg._id);
 			setCreatedLobby(msg._id);
 		});
+
+		return () => {
+			socketCurrent.off("lobby:createLobby");
+			socketCurrent.off("lobby:joinLobby");
+			socketCurrent.off("disconnect");
+		};
+	}, [lobbies]);
+	useEffect(() => {
 		socketCurrent.on("lobby:joinLobby", (msg) => {
 			setLobbies((prevLobbies) =>
 				prevLobbies.map((lobby) =>
@@ -59,19 +67,19 @@ export const LobbiesProvider = ({ children }) => {
 						: lobby,
 				),
 			);
+			console.log("Lobby joined:", msg);
 		});
 		return () => {
-			socketCurrent.off("lobby:createLobby");
 			socketCurrent.off("lobby:joinLobby");
-			socketCurrent.off("disconnect");
 		};
-	}, [lobbies]);
+	}, [t]);
 	// Todo: Create Create-Lobby DTO here.
 	const createLobby = (lobbyData) => {
 		socketCurrent.emit("lobby:createLobby", lobbyData);
 	};
 	const joinLobby = (lobbyId) => {
 		socketCurrent.emit("lobby:joinLobby", lobbyId);
+
 		setSelectedLobby(lobbyId);
 		navigate(`/lobby/${lobbyId}`);
 	};

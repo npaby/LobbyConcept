@@ -21,11 +21,12 @@ export const SocketsProvider = ({ children }: { children: ReactNode }) => {
 			},
 			transports: ["websocket"],
 			upgrade: false,
+			reconnection: true,
 		});
+		socketInstance.on("connect");
 		console.log("Socket initialized");
 		return socketInstance;
 	}, []);
-
 	return (
 		<SocketsContext.Provider value={{ socket }}>
 			{children}

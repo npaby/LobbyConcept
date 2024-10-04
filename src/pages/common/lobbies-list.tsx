@@ -6,7 +6,7 @@ export default function LobbiesList() {
 	const { lobbies } = useLobbies();
 	return (
 		<ScrollArea className="overflow-auto w-dvh h-[70lvh] bg-amber-300 p-5">
-			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
 				{(() => {
 					console.log("Does thid rerenders?");
 				})()}

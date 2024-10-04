@@ -25,8 +25,11 @@ export default function LobbiesCard({ lobby }) {
 					{lobby?.lobbyRank || "Lobby Rank"}
 				</div>
 				<div className="text-sm m-2 text-gray-500">
-					{lobby?.members?.length || "No Members"}
+					{lobby?.members?.map((member) => (
+						<div key={member.memberId}>{member.memberId}</div>
+					))}
 				</div>
+
 				<div className={"mt-4 mb-4"}>{/* RenderMembers */}</div>
 				<Button
 					className="w-full text-white bg-blue-500 hover:bg-blue-600"

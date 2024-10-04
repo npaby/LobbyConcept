@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 		};
 		fetchUserData();
 		return () => {};
-	}, [cookies.accessToken]);
+	}, [isAuthenticated]);
 	return (
 		<AuthContext.Provider
 			value={{ isAuthenticated, storedValue, isAdmin, login, logout }}

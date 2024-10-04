@@ -15,6 +15,7 @@ function AppRoutes() {
 			<SocketsProvider>
 				<BrowserRouter>
 					<Routes>
+						<Route path="/" element={<LobbyDashboardPage />} />
 						<Route path="/auth/signup" element={<SignUpPage />} />
 						<Route path="/auth/signin" element={<SignInPage />} />
 						<Route

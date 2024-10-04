@@ -29,7 +29,6 @@ export const LobbiesProvider = ({ children }) => {
 			);
 		});
 		return () => {
-			// socketCurrent.disconnect();
 			socketCurrent.off("connect");
 			socketCurrent.off("lobby:getLobbies");
 			socketCurrent.off("lobby:createLobby");
@@ -49,13 +48,12 @@ export const LobbiesProvider = ({ children }) => {
 				},
 			]);
 			console.log("Created lobby ID:", msg._id);
-			setCreatedLobby(msg._id);
 		});
 
 		return () => {
 			socketCurrent.off("lobby:createLobby");
-			socketCurrent.off("lobby:joinLobby");
-			socketCurrent.off("disconnect");
+			// socketCurrent.off("lobby:joinLobby");
+			// socketCurrent.off("disconnect");
 		};
 	}, [lobbies]);
 	useEffect(() => {

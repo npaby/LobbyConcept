@@ -75,15 +75,15 @@ export default function LobbiesHeader() {
 								/>
 							</div>
 
-							<div className="mb-4 w-full mb-4 ">
-								<Label className="w-full h-12 ">Members</Label>
-								<input
-									className="w-full h-12"
-									onChange={(e) =>
-										setLobbyData({ ...lobbyData, rank: e.target.value })
-									}
-								/>
-							</div>
+							{/*<div className="mb-4 w-full mb-4 ">*/}
+							{/*	<Label className="w-full h-12 ">Members</Label>*/}
+							{/*	<input*/}
+							{/*		className="w-full h-12"*/}
+							{/*		onChange={(e) =>*/}
+							{/*			setLobbyData({ ...lobbyData, rank: e.target.value })*/}
+							{/*		}*/}
+							{/*	/>*/}
+							{/*</div>*/}
 
 							<div className="mb-4 w-full mb-4 ">
 								<Label className="w-full h-12">Role (Yours)</Label>

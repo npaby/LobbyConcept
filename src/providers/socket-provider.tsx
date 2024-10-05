@@ -7,10 +7,13 @@ import {
 } from "react";
 import { useCookies } from "react-cookie";
 import io, { type Socket } from "socket.io-client";
+
+// Fix: Properly initialize the context by calling createContext()
 interface SocketsContextType {
-	socket: Socket | null;
+	socket: Socket | null; // Adjusted for type safety
 }
-const SocketsContext = createContext<SocketsContextType | null>(null);
+const SocketsContext = createContext<SocketsContextType | undefined>(undefined);
+
 export const SocketsProvider = ({ children }: { children: ReactNode }) => {
 	const [cookies] = useCookies();
 
@@ -23,17 +26,29 @@ export const SocketsProvider = ({ children }: { children: ReactNode }) => {
 			upgrade: false,
 			reconnection: true,
 		});
-		socketInstance.on("connect");
-		console.log("Socket initialized");
+		socketInstance.on("connect", () => {
+			console.log("Socket connected");
+		});
 		return socketInstance;
-	}, []);
+	}, [cookies.accessToken]);
+	// useEffect(() => {
+	// 	return () => {
+	// 		if (socket) {
+	// 			socket.disconnect();
+	// 			console.log("Socket disconnected");
+	// 		}
+	// 	};
+	// }, [socket]);
 	return (
 		<SocketsContext.Provider value={{ socket }}>
 			{children}
 		</SocketsContext.Provider>
 	);
 };
-
 export const useSockets = () => {
-	return useContext(SocketsContext);
+	const context = useContext(SocketsContext);
+	if (!context) {
+		throw new Error("useSockets must be used within a SocketsProvider");
+	}
+	return context.socket;
 };

@@ -41,7 +41,9 @@ export default function LobbiesCard({ lobby }) {
 				</div>
 				<div className="text-sm m-2 text-gray-500 bg-amber-300 p-2 rounded-2xl">
 					{lobby?.members?.map((member) => (
-						<div key={member.memberId}>{member.memberId}</div>
+						<div key={member.memberId}>
+							{member.memberId} || {member?.isOwner ? "O" : "M"}
+						</div>
 					))}
 				</div>
 

@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import * as React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../components/ui/button.tsx";
+import {
+	ContextMenu,
+	ContextMenuContent,
+	ContextMenuItem,
+	ContextMenuTrigger,
+} from "../components/ui/context-menu.tsx";
 import { useLocalStorage } from "../hooks/useLocalStorage.tsx";
 import { useSockets } from "../providers/socket-provider.tsx";
 
@@ -12,13 +18,18 @@ export default function LobbyDetailPage() {
 	const [lobbyInfo, setLobbyInfo] = useState(null);
 	const [storedValue] = useLocalStorage("userData", {});
 	const navigate = useNavigate();
+	const [isUserOwner, setIsUserOwner] = useState(false);
 	console.log("[LDP]: Rerenders");
 
 	if (lobbyId !== "[object Object]" && socket) {
 		useEffect(() => {
+			socket.emit("lobby:getLobbyInfo", lobbyId);
+			socket.emit("lobby:joinLobby", lobbyId);
+			socket.emit("lobby:joinLobby", lobbyId);
 			console.log("First Use Effect");
 			socket.on("lobby:joinLobby", (msg) => {
 				console.log("Someone joined lobby:");
+				socket.emit("lobby:getLobbyInfo", lobbyId);
 			});
 
 			if (!socket) {
@@ -33,7 +44,7 @@ export default function LobbyDetailPage() {
 				socket.off("lobby:getLobbyInfo");
 				socket.off("lobby:joinLobby");
 			};
-		}, [lobbyId]);
+		}, [socket]);
 		// -- This does not work properly.
 		// useEffect(() => {
 		// 	if (leaveLobby && socket) {
@@ -85,15 +96,69 @@ export default function LobbyDetailPage() {
 			}
 			setLeaveLobby(true);
 		};
-
+		const handleMakeOwner = () => {
+			function alertPerson() {
+				alert("You promoted someone!");
+			}
+		};
+		const handleReportLobby = () => {};
 		const renderMembers = () => {
+			useEffect(() => {
+				if (lobbyInfo?.members) {
+					for (const member of lobbyInfo.members) {
+						if (member.memberId === storedValue.sub) {
+							if (member.isOwner) {
+								console.log("User is owner");
+								setIsUserOwner(true);
+							}
+						}
+					}
+				}
+			}, [lobbyInfo, storedValue]);
+			if (isUserOwner) {
+				return lobbyInfo?.members?.map((member: any) => (
+					<ContextMenu>
+						<ContextMenuTrigger>
+							<div
+								key={member?.memberId}
+								className="h-[15dvh] bg-black m-4 rounded-3xl text-white flex items-center justify-center"
+							>
+								<div className="text-3xl">
+									{member?.memberId} || {member?.isOwner ? "Owner" : "Member"}
+								</div>
+							</div>
+						</ContextMenuTrigger>
+						<ContextMenuContent>
+							<ContextMenuItem>Kick</ContextMenuItem>
+							<ContextMenuItem>Report</ContextMenuItem>
+							<ContextMenuItem>Add Friend</ContextMenuItem>
+							{!member?.isOwner && (
+								<ContextMenuItem onClick={handleMakeOwner}>
+									Make Owner
+								</ContextMenuItem>
+							)}
+						</ContextMenuContent>
+					</ContextMenu>
+				));
+			}
 			return lobbyInfo?.members?.map((member: any) => (
-				<div
-					key={member?.memberId}
-					className="h-[15dvh] bg-black m-4 rounded-3xl text-white flex items-center justify-center"
-				>
-					<div className="text-3xl">{member?.memberId}</div>
-				</div>
+				<ContextMenu>
+					<ContextMenuTrigger>
+						<div
+							key={member?.memberId}
+							className="h-[15dvh] bg-black m-4 rounded-3xl text-white flex items-center justify-center"
+						>
+							<div className="text-3xl">
+								{member?.memberId} || {member?.isOwner ? "Owner" : "Member"}
+							</div>
+						</div>
+					</ContextMenuTrigger>
+					<ContextMenuContent>
+						<ContextMenuItem>Kick</ContextMenuItem>
+						<ContextMenuItem>Report</ContextMenuItem>
+						<ContextMenuItem>Add Friend</ContextMenuItem>
+					</ContextMenuContent>
+				</ContextMenu>
 			));
 		};
 
@@ -113,7 +178,7 @@ export default function LobbyDetailPage() {
 							<div className="p-2">
 								<h1 className="text-3xl">{lobbyInfo?.roomName}</h1>
 								<div className="flex gap-4 flex-wrap align-bottom">
-									<Button>Report Lobby</Button>
+									<Button onClick={handleReportLobby}>Report Lobby</Button>
 									<Button onClick={handleLeaveLobby}>Leave Lobby</Button>
 								</div>
 							</div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../components/ui/button.tsx";
@@ -19,6 +19,7 @@ export default function LobbyDetailPage() {
 	const [storedValue] = useLocalStorage("userData", {});
 	const navigate = useNavigate();
 	const [isUserOwner, setIsUserOwner] = useState(false);
+	const [toMakeOwner, setToMakeOwner] = useState("");
 	console.log("--------------- LOBBY DETAIL PAGE -----------------");
 	// console.log("[LDP]: Rerenders");
 	// console.log(socket);
@@ -40,10 +41,14 @@ export default function LobbyDetailPage() {
 			socket.on("lobby:leaveLobby", (msg) => {
 				socket.emit("lobby:getLobbyInfo", lobbyId);
 			});
+			socket.on("lobby:updateLobby:makeOwner", (msg) => {
+				socket.emit("lobby:getLobbyInfo", lobbyId);
+			});
 			return () => {
 				socket.off("lobby:getLobbyInfo");
 				socket.off("lobby:joinLobby");
 				socket.off("lobby:leaveLobby");
+				socket.off("lobby:updateLobby:makeOwner");
 			};
 		}, []);
 
@@ -54,11 +59,13 @@ export default function LobbyDetailPage() {
 			}
 			setLeaveLobby(true);
 		};
-		const handleMakeOwner = () => {
-			function alertPerson() {
-				alert("You promoted someone!");
-			}
-		};
+		const handleMakeOwner = useCallback((memberId) => {
+			console.log("You promoted someone!", memberId);
+			socket.emit("lobby:updateLobby:makeOwner", {
+				lobbyId,
+				memberId,
+			});
+		}, []);
 		const handleReportLobby = () => {};
 		const renderMembers = () => {
 			useEffect(() => {
@@ -67,7 +74,7 @@ export default function LobbyDetailPage() {
 						if (member.memberId === storedValue.sub) {
 							if (member.isOwner) {
 								// console.log("User is owner");
-								// setIsUserOwner(true);
+								setIsUserOwner(true);
 							}
 						}
 					}
@@ -91,7 +98,11 @@ export default function LobbyDetailPage() {
 							<ContextMenuItem>Report</ContextMenuItem>
 							<ContextMenuItem>Add Friend</ContextMenuItem>
 							{!member?.isOwner && (
-								<ContextMenuItem onClick={handleMakeOwner}>
+								<ContextMenuItem
+									onClick={() => {
+										handleMakeOwner(member?.memberId);
+									}}
+								>
 									Make Owner
 								</ContextMenuItem>
 							)}

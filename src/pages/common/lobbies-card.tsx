@@ -20,10 +20,8 @@ export default function LobbiesCard({ lobby }) {
 			console.error("Socket is not initialized");
 			return;
 		}
-		console.log(lobby);
 		socket.emit("lobby:joinLobby", lobby?.lobbyId);
 		console.log("Joining lobby:", lobby.lobbyId);
-		joinLobby(lobby);
 		navigate(`/lobby/${lobby?.lobbyId}`);
 	};
 
@@ -50,7 +48,7 @@ export default function LobbiesCard({ lobby }) {
 				<div className={"mt-4 mb-4"}>{/* RenderMembers */}</div>
 				<Button
 					className="w-full text-white bg-blue-500 hover:bg-blue-600"
-					onClick={() => handleJoinLobby(lobby))
+					onClick={() => handleJoinLobby(lobby)}
 				>
 					Join Lobby
 				</Button>

@@ -13,7 +13,7 @@ export const LobbiesProvider = ({ children }) => {
 	const navigate = useNavigate();
 	const [cookies] = useCookies();
 	const socketCurrent: Socket | null = useSockets();
-
+	console.log("[LP]: Rerenders");
 	useEffect(() => {
 		if (!socketCurrent) return;
 		socketCurrent.emit("lobby:getLobbies");
@@ -44,11 +44,28 @@ export const LobbiesProvider = ({ children }) => {
 					members: msg.members,
 				},
 			]);
+			console.log("Created Lobby: ", msg._id);
+			setCreatedLobby(msg._id);
 		});
 		return () => {
 			socketCurrent.off("lobby:createLobby");
 		};
 	}, [socketCurrent, lobbies]);
+	// useEffect(() => {
+	// 	if (socketCurrent) {
+	// 		socketCurrent.on("lobby:leaveLobby", (msg) => {
+	// 			console.log(socketCurrent.id, " leaving lobby:", msg);
+	// 			setLobbies((prevLobbies) =>
+	// 				prevLobbies.filter((lobby) => lobby !== msg),
+	// 			);
+	// 			console.log("Someone is leaving lobby!!");
+	// 		});
+	// 	}
+	// 	return () => {
+	// 		socketCurrent.off("lobby:leaveLobby");
+	// 	};
+	// }, [socketCurrent, lobbies]);
+
 	const createLobby = (lobbyData) => {
 		if (socketCurrent) {
 			socketCurrent.emit("lobby:createLobby", lobbyData);
@@ -62,12 +79,14 @@ export const LobbiesProvider = ({ children }) => {
 			navigate(`/lobby/${lobby}`);
 		}
 	};
+
 	return (
 		<LobbiesContext.Provider
 			value={{
 				lobbies,
 				selectedLobby,
 				setSelectedLobby,
+				createdLobby,
 				createLobby,
 				joinLobby,
 			}}

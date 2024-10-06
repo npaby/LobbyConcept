@@ -13,7 +13,7 @@ import {
 import { Label } from "../../components/ui/label.tsx";
 import { useLocalStorage } from "../../hooks/useLocalStorage.tsx";
 import { useLobbies } from "../../providers/lobbies-provider.tsx";
-
+import { useSockets } from "../../providers/socket-provider.tsx";
 class LobbyDataDto {
 	roomName: string;
 	rank: string;
@@ -29,6 +29,7 @@ export default function LobbiesHeader() {
 		memberId: "",
 		role: "",
 	});
+	const socket = useSockets();
 	const [storedValue] = useLocalStorage("userData", {});
 	const handleCreateLobby = () => {
 		console.log(lobbyData);
@@ -37,9 +38,12 @@ export default function LobbiesHeader() {
 	return (
 		<>
 			<div className="mb-5">
-				<Label className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+				<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 					Lobbies Management
-				</Label>
+				</h1>
+				<h1 className="text-3xl m-4">
+					UID: {storedValue.sub} SID: {socket.id}
+				</h1>
 			</div>
 			<div className="flex-col-2 flex justify-items-end">
 				<Dialog>

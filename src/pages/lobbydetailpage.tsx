@@ -34,7 +34,6 @@ export default function LobbyDetailPage() {
 				setLobbyInfo(msg);
 			});
 			socket.emit("lobby:joinLobby", lobbyId);
-
 			socket.on("lobby:joinLobby", (msg) => {
 				socket.emit("lobby:getLobbyInfo", lobbyId);
 			});
@@ -66,7 +65,10 @@ export default function LobbyDetailPage() {
 				memberId,
 			});
 		}, []);
-		const handleReportLobby = () => {};
+		// const handleReportLobby = useCallback((lobbyId, reportInformation)) => {};
+		const handleReportMember = useCallback((memberId) => {}, []);
+		const handleKickMember = useCallback((memberId) => {}, []);
+
 		const renderMembers = () => {
 			useEffect(() => {
 				if (lobbyInfo?.members) {

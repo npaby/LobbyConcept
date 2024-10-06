@@ -13,13 +13,14 @@ export default function LobbyDetailPage() {
 	const [storedValue] = useLocalStorage("userData", {});
 	const navigate = useNavigate();
 	console.log("[LDP]: Rerenders");
+
 	if (lobbyId !== "[object Object]" && socket) {
 		useEffect(() => {
-			socket.emit("lobby:joinLobby", lobbyId);
+			console.log("First Use Effect");
 			socket.on("lobby:joinLobby", (msg) => {
-				console.log("Someone joined lobby:", msg);
+				console.log("Someone joined lobby:");
 			});
-			socket.emit("lobby:getLobbyInfo", lobbyId);
+
 			if (!socket) {
 				console.error("Socket is not initialized.");
 				return;
@@ -32,12 +33,43 @@ export default function LobbyDetailPage() {
 				socket.off("lobby:getLobbyInfo");
 				socket.off("lobby:joinLobby");
 			};
-		}, [lobbyId, socket]);
+		}, [lobbyId]);
+		// -- This does not work properly.
+		// useEffect(() => {
+		// 	if (leaveLobby && socket) {
+		// 		socket.on("lobby:leaveLobby", (msg) => {
+		// 			console.log("Leaving lobby:", msg);
+		// 			navigate("../..");
+		// 		});
+		// 	}
+		// 	return () => {
+		// 		if (socket) {
+		// 			socket.off("lobby:leaveLobby");
+		// 		}
+		// 	};
+		// }, [leaveLobby, socket, navigate])
 		useEffect(() => {
-			if (leaveLobby && socket) {
+			console.log("Second Use Effect");
+			if (socket) {
+				socket.on("lobby:joinLobby", (msg) => {
+					console.log("[Second Use Effect]: Someone joined lobby");
+					socket.emit("lobby:getLobbyInfo", lobbyId);
+					// console.log("Someone joined lobby:", msg);
+				});
+			}
+			return () => {
+				socket.off("lobby:getLobbyInfo");
+				socket.off("lobby:joinLobby");
+			};
+		}, [socket, lobbyId]);
+		// Todo: This works fine
+		useEffect(() => {
+			console.log("Third Use Effect");
+			if (socket) {
 				socket.on("lobby:leaveLobby", (msg) => {
-					console.log("Leaving lobby:", msg);
-					navigate("../..");
+					console.log("[Third Use Effect]: Leaving lobby");
+					socket.emit("lobby:getLobbyInfo", lobbyId);
+					console.log("Someone Left");
 				});
 			}
 			return () => {
@@ -45,19 +77,10 @@ export default function LobbyDetailPage() {
 					socket.off("lobby:leaveLobby");
 				}
 			};
-		}, [leaveLobby, socket, navigate]);
-		useEffect(() => {
-			if (socket) {
-				socket.on("lobby:leaveLobby", (msg) => {
-					socket.emit("lobby:getLobbyInfo", lobbyId);
-					console.log("Someone Left");
-				});
-			}
 		}, [socket]);
 		const handleLeaveLobby = () => {
 			if (socket) {
 				socket.emit("lobby:leaveLobby", lobbyId);
-				// console.log("Leaving lobby successful");
 				navigate("../..");
 			}
 			setLeaveLobby(true);

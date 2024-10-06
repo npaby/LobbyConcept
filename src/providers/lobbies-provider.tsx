@@ -65,16 +65,15 @@ export const LobbiesProvider = ({ children }) => {
 	// 		socketCurrent.off("lobby:leaveLobby");
 	// 	};
 	// }, [socketCurrent, lobbies]);
-
 	const createLobby = (lobbyData) => {
 		if (socketCurrent) {
 			socketCurrent.emit("lobby:createLobby", lobbyData);
 		}
 	};
+
 	const joinLobby = (lobby) => {
 		if (socketCurrent) {
 			socketCurrent.emit("lobby:joinLobby", lobby);
-			setSelectedLobby(lobby);
 			console.log("Joining lobby:", lobby);
 			navigate(`/lobby/${lobby}`);
 		}
@@ -85,7 +84,6 @@ export const LobbiesProvider = ({ children }) => {
 			value={{
 				lobbies,
 				selectedLobby,
-				setSelectedLobby,
 				createdLobby,
 				createLobby,
 				joinLobby,

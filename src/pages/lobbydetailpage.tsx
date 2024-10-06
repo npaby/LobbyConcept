@@ -19,76 +19,34 @@ export default function LobbyDetailPage() {
 	const [storedValue] = useLocalStorage("userData", {});
 	const navigate = useNavigate();
 	const [isUserOwner, setIsUserOwner] = useState(false);
-	console.log("[LDP]: Rerenders");
-
+	console.log("--------------- LOBBY DETAIL PAGE -----------------");
+	// console.log("[LDP]: Rerenders");
+	// console.log(socket);
 	if (lobbyId !== "[object Object]" && socket) {
 		useEffect(() => {
-			socket.emit("lobby:getLobbyInfo", lobbyId);
-			socket.emit("lobby:joinLobby", lobbyId);
-			socket.emit("lobby:joinLobby", lobbyId);
-			console.log("First Use Effect");
-			socket.on("lobby:joinLobby", (msg) => {
-				console.log("Someone joined lobby:");
-				socket.emit("lobby:getLobbyInfo", lobbyId);
-			});
-
 			if (!socket) {
 				console.error("Socket is not initialized.");
 				return;
 			}
+			socket.emit("lobby:getLobbyInfo", lobbyId);
 			socket.on("lobby:getLobbyInfo", (msg) => {
 				setLobbyInfo(msg);
-				console.log("Lobby info:", msg);
+			});
+			socket.emit("lobby:joinLobby", lobbyId);
+
+			socket.on("lobby:joinLobby", (msg) => {
+				socket.emit("lobby:getLobbyInfo", lobbyId);
+			});
+			socket.on("lobby:leaveLobby", (msg) => {
+				socket.emit("lobby:getLobbyInfo", lobbyId);
 			});
 			return () => {
 				socket.off("lobby:getLobbyInfo");
 				socket.off("lobby:joinLobby");
+				socket.off("lobby:leaveLobby");
 			};
-		}, [socket]);
-		// -- This does not work properly.
-		// useEffect(() => {
-		// 	if (leaveLobby && socket) {
-		// 		socket.on("lobby:leaveLobby", (msg) => {
-		// 			console.log("Leaving lobby:", msg);
-		// 			navigate("../..");
-		// 		});
-		// 	}
-		// 	return () => {
-		// 		if (socket) {
-		// 			socket.off("lobby:leaveLobby");
-		// 		}
-		// 	};
-		// }, [leaveLobby, socket, navigate])
-		useEffect(() => {
-			console.log("Second Use Effect");
-			if (socket) {
-				socket.on("lobby:joinLobby", (msg) => {
-					console.log("[Second Use Effect]: Someone joined lobby");
-					socket.emit("lobby:getLobbyInfo", lobbyId);
-					// console.log("Someone joined lobby:", msg);
-				});
-			}
-			return () => {
-				socket.off("lobby:getLobbyInfo");
-				socket.off("lobby:joinLobby");
-			};
-		}, [socket, lobbyId]);
-		// Todo: This works fine
-		useEffect(() => {
-			console.log("Third Use Effect");
-			if (socket) {
-				socket.on("lobby:leaveLobby", (msg) => {
-					console.log("[Third Use Effect]: Leaving lobby");
-					socket.emit("lobby:getLobbyInfo", lobbyId);
-					console.log("Someone Left");
-				});
-			}
-			return () => {
-				if (socket) {
-					socket.off("lobby:leaveLobby");
-				}
-			};
-		}, [socket]);
+		}, []);
+
 		const handleLeaveLobby = () => {
 			if (socket) {
 				socket.emit("lobby:leaveLobby", lobbyId);
@@ -108,8 +66,8 @@ export default function LobbyDetailPage() {
 					for (const member of lobbyInfo.members) {
 						if (member.memberId === storedValue.sub) {
 							if (member.isOwner) {
-								console.log("User is owner");
-								setIsUserOwner(true);
+								// console.log("User is owner");
+								// setIsUserOwner(true);
 							}
 						}
 					}

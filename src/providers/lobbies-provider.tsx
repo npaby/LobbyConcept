@@ -14,27 +14,22 @@ export const LobbiesProvider = ({ children }) => {
 	const [cookies] = useCookies();
 	const socketCurrent: Socket | null = useSockets();
 	console.log("[LP]: Rerenders");
+
 	useEffect(() => {
 		if (!socketCurrent) return;
-		socketCurrent.emit("lobby:getLobbies");
-		socketCurrent.on("lobby:getLobbies", (msg) => {
+
+		const handleGetLobbies = (msg: any) => {
 			setLobbies(
-				msg.map((lobby) => ({
+				msg.map((lobby: any) => ({
 					roomName: lobby.roomName,
 					lobbyId: lobby._id,
 					lobbyRank: lobby.rank,
 					members: lobby.members,
 				})),
 			);
-		});
-		return () => {
-			socketCurrent.off("lobby:getLobbies");
 		};
-	}, [socketCurrent, cookies]);
 
-	useEffect(() => {
-		if (!socketCurrent) return;
-		socketCurrent.on("lobby:createLobby", (msg) => {
+		const handleCreateLobby = (msg: any) => {
 			setLobbies((prevLobbies) => [
 				...prevLobbies,
 				{
@@ -44,27 +39,18 @@ export const LobbiesProvider = ({ children }) => {
 					members: msg.members,
 				},
 			]);
-			console.log("Created Lobby: ", msg._id);
-			setCreatedLobby(msg._id);
-		});
-		return () => {
-			socketCurrent.off("lobby:createLobby");
 		};
-	}, [socketCurrent, lobbies]);
-	// useEffect(() => {
-	// 	if (socketCurrent) {
-	// 		socketCurrent.on("lobby:leaveLobby", (msg) => {
-	// 			console.log(socketCurrent.id, " leaving lobby:", msg);
-	// 			setLobbies((prevLobbies) =>
-	// 				prevLobbies.filter((lobby) => lobby !== msg),
-	// 			);
-	// 			console.log("Someone is leaving lobby!!");
-	// 		});
-	// 	}
-	// 	return () => {
-	// 		socketCurrent.off("lobby:leaveLobby");
-	// 	};
-	// }, [socketCurrent, lobbies]);
+
+		socketCurrent.emit("lobby:getLobbies");
+		socketCurrent.on("lobby:getLobbies", handleGetLobbies);
+		socketCurrent.on("lobby:createLobby", handleCreateLobby);
+
+		return () => {
+			socketCurrent.off("lobby:getLobbies", handleGetLobbies);
+			socketCurrent.off("lobby:createLobby", handleCreateLobby);
+		};
+	}, [socketCurrent, cookies]);
+
 	const createLobby = (lobbyData) => {
 		if (socketCurrent) {
 			socketCurrent.emit("lobby:createLobby", lobbyData);
@@ -78,7 +64,6 @@ export const LobbiesProvider = ({ children }) => {
 			navigate(`/lobby/${lobby}`);
 		}
 	};
-
 	return (
 		<LobbiesContext.Provider
 			value={{

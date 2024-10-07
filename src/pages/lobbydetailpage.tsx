@@ -66,8 +66,12 @@ export default function LobbyDetailPage() {
 			});
 		}, []);
 		// const handleReportLobby = useCallback((lobbyId, reportInformation)) => {};
-		const handleReportMember = useCallback((memberId) => {}, []);
-		const handleKickMember = useCallback((memberId) => {}, []);
+		const handleReportMember = useCallback((memberId) => {
+			alert("You reported someone!", memberId);
+		}, []);
+		const handleKickMember = useCallback((memberId) => {
+			alert("You kicked someone!", memberId);
+		}, []);
 
 		const renderMembers = () => {
 			useEffect(() => {
@@ -96,17 +100,31 @@ export default function LobbyDetailPage() {
 							</div>
 						</ContextMenuTrigger>
 						<ContextMenuContent>
-							<ContextMenuItem>Kick</ContextMenuItem>
-							<ContextMenuItem>Report</ContextMenuItem>
+							<ContextMenuItem
+								onClick={() => {
+									handleReportMember(member?.memberId);
+								}}
+							>
+								Report
+							</ContextMenuItem>
 							<ContextMenuItem>Add Friend</ContextMenuItem>
 							{!member?.isOwner && (
-								<ContextMenuItem
-									onClick={() => {
-										handleMakeOwner(member?.memberId);
-									}}
-								>
-									Make Owner
-								</ContextMenuItem>
+								<>
+									<ContextMenuItem
+										onClick={() => {
+											handleMakeOwner(member?.memberId);
+										}}
+									>
+										Make Owner
+									</ContextMenuItem>
+									<ContextMenuItem
+										onClick={() => {
+											handleKickMember(member?.memberId);
+										}}
+									>
+										Kick User
+									</ContextMenuItem>
+								</>
 							)}
 						</ContextMenuContent>
 					</ContextMenu>
@@ -125,8 +143,13 @@ export default function LobbyDetailPage() {
 						</div>
 					</ContextMenuTrigger>
 					<ContextMenuContent>
-						<ContextMenuItem>Kick</ContextMenuItem>
-						<ContextMenuItem>Report</ContextMenuItem>
+						<ContextMenuItem
+							onClick={() => {
+								handleReportMember(member?.memberId);
+							}}
+						>
+							Report
+						</ContextMenuItem>
 						<ContextMenuItem>Add Friend</ContextMenuItem>
 					</ContextMenuContent>
 				</ContextMenu>

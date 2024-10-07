@@ -42,6 +42,7 @@ export const LobbiesProvider = ({ children }) => {
 		};
 
 		socketCurrent.emit("lobby:getLobbies");
+		// socketCurrent.on("lobby:makeOwner"", 	);
 		socketCurrent.on("lobby:getLobbies", handleGetLobbies);
 		socketCurrent.on("lobby:createLobby", handleCreateLobby);
 

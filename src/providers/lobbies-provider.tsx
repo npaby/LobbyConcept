@@ -52,9 +52,10 @@ export const LobbiesProvider = ({ children }) => {
 	}, [socketCurrent, cookies]);
 
 	const createLobby = (lobbyData) => {
-		if (socketCurrent) {
-			socketCurrent.emit("lobby:createLobby", lobbyData);
-		}
+		socketCurrent.emit("lobby:createLobby", lobbyData, (response) => {
+			navigate(`/lobby/${response._id}`);
+			console.log(response);
+		});
 	};
 
 	const joinLobby = (lobby) => {

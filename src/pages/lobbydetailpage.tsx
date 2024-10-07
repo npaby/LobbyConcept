@@ -149,7 +149,7 @@ export default function LobbyDetailPage() {
 							<div className="p-2">
 								<h1 className="text-3xl">{lobbyInfo?.roomName}</h1>
 								<div className="flex gap-4 flex-wrap align-bottom">
-									<Button onClick={handleReportLobby}>Report Lobby</Button>
+									{/*<Button onClick={handleReportLobby}>Report Lobby</Button>*/}
 									<Button onClick={handleLeaveLobby}>Leave Lobby</Button>
 								</div>
 							</div>

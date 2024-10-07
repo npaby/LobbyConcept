@@ -43,6 +43,12 @@ export default function LobbyDetailPage() {
 			socket.on("lobby:updateLobby:makeOwner", (msg) => {
 				socket.emit("lobby:getLobbyInfo", lobbyId);
 			});
+			socket.on("lobby:updateLobby:kickMember", (msg) => {
+				socket.emit("lobby:getLobbyInfo", lobbyId);
+			});
+			socket.on("lobby:updateLobby:kickMember:youHaveBeenKicked", () => {
+				navigate("../..");
+			});
 			return () => {
 				socket.off("lobby:getLobbyInfo");
 				socket.off("lobby:joinLobby");
@@ -70,7 +76,9 @@ export default function LobbyDetailPage() {
 			alert("You reported someone!", memberId);
 		}, []);
 		const handleKickMember = useCallback((memberId) => {
-			alert("You kicked someone!", memberId);
+			// alert("You kicked someone!", memberId);
+			socket.emit("lobby:updateLobby:kickMember", { lobbyId, memberId });
+			console.log("Kicking Member ", lobbyId, memberId);
 		}, []);
 
 		const renderMembers = () => {

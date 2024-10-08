@@ -12,9 +12,9 @@ import HardSupport from "../../imgs/HardSupport.svg";
 import Midlaner from "../../imgs/Midlaner.svg";
 import Offlane from "../../imgs/Offlane.svg";
 import SoftSupport from "../../imgs/SoftSupport.svg";
+import renderRoleIcons from "../../pages/common/renderRoleIcon.tsx";
 import { useLobbies } from "../../providers/lobbies-provider.tsx";
 import { useSockets } from "../../providers/socket-provider.tsx";
-
 export default function LobbiesCard({ lobby }) {
 	const socket = useSockets();
 	const { joinLobby } = useLobbies();
@@ -29,27 +29,7 @@ export default function LobbiesCard({ lobby }) {
 		console.log("Joining lobby:", lobby.lobbyId);
 		navigate(`/lobby/${lobby?.lobbyId}`);
 	};
-	const renderRoleIcons = (member) => {
-		switch (member?.role) {
-			case "Offlane":
-				return <img className="w-6" src={Offlane} alt="Offline Role Icon" />;
-			case "Carry":
-				return <img className="w-6" src={Carry} alt="Carry Role Icon" />;
-			case "HardSupport":
-				return (
-					<img className="w-6" src={HardSupport} alt="HardSupport Role Icon" />
-				);
-			case "Midlaner":
-				return <img className="w-6" src={Midlaner} alt="Midlaner Role Icon" />;
-			case "SoftSupport":
-				return (
-					<img className="w-6" src={SoftSupport} alt="SoftSupport Role Icon" />
-				);
-			default:
-				return null;
-		}
-		return null;
-	};
+
 	return (
 		<Card className="shadow-md h-96" id={lobby.lobbyId}>
 			<CardHeader>

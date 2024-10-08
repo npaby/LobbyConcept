@@ -11,6 +11,15 @@ import {
 	DialogTrigger,
 } from "../../components/ui/dialog.tsx";
 import { Label } from "../../components/ui/label.tsx";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "../../components/ui/select.tsx";
 import { useLocalStorage } from "../../hooks/useLocalStorage.tsx";
 import { useLobbies } from "../../providers/lobbies-provider.tsx";
 import { useSockets } from "../../providers/socket-provider.tsx";
@@ -70,13 +79,23 @@ export default function LobbiesHeader() {
 							</div>
 
 							<div className="mb-4 w-full mb-4">
-								<Label className="w-full h-12">Rank</Label>
-								<input
-									className="w-full h-12"
-									onChange={(e) =>
-										setLobbyData({ ...lobbyData, rank: e.target.value })
-									}
-								/>
+								<Label className="w-full h-12">Role</Label>
+								<Select
+									onValueChange={(e) => setLobbyData({ ...lobbyData, role: e })}
+								>
+									<SelectTrigger className="w-full">
+										<SelectValue placeholder="Select a Role" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectItem value="Carry">Carry</SelectItem>
+											<SelectItem value="HardSupport">Hard Support</SelectItem>
+											<SelectItem value="Midlaner">Midlaner</SelectItem>
+											<SelectItem value="Offlane">Offlane</SelectItem>
+											<SelectItem value="SoftSupport">Soft Support</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
 							</div>
 
 							{/*<div className="mb-4 w-full mb-4 ">*/}
@@ -90,13 +109,26 @@ export default function LobbiesHeader() {
 							{/*</div>*/}
 
 							<div className="mb-4 w-full mb-4 ">
-								<Label className="w-full h-12">Role (Yours)</Label>
-								<input
-									className="w-full h-12"
-									onChange={(e) =>
-										setLobbyData({ ...lobbyData, role: e.target.value })
-									}
-								/>
+								<Label className="w-full h-12">Rank</Label>
+								<Select
+									onValueChange={(e) => setLobbyData({ ...lobbyData, rank: e })}
+								>
+									<SelectTrigger className="w-full">
+										<SelectValue placeholder="Select lobby rank" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectItem value="Herald">Herald</SelectItem>
+											<SelectItem value="Guardian">Guardian</SelectItem>
+											<SelectItem value="Crusader">Crusader</SelectItem>
+											<SelectItem value="Archon">Archon</SelectItem>
+											<SelectItem value="Legend">Legend</SelectItem>
+											<SelectItem value="Ancient">Ancient</SelectItem>
+											<SelectItem value="Divine">Divine</SelectItem>
+											<SelectItem value="Immortal">Immortal</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
 							</div>
 							<Button
 								className="w-full h-12 text-white bg-blue-500 hover:bg-blue-600"

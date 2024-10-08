@@ -113,16 +113,17 @@ export default function LobbyDetailPage() {
 		if (isUserOwner) {
 			return lobbyInfo?.members?.map((member: any) => (
 				<div className="h-[10dvh] m-4 rounded-3xl bg-amber-950 flex flex-row grid-2 items-center text-center justify-center">
-					<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
-						<Avatar>
-							<AvatarImage
-								src={HardSupport}
-								width="128px"
-								height="64px"
-								className="object-fill"
-							/>
-						</Avatar>
-					</div>
+					{/*<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">*/}
+					{/*	<Avatar>*/}
+					{/*		<AvatarImage*/}
+					{/*			src={HardSupport}*/}
+					{/*			width="128px"*/}
+					{/*			height="64px"*/}
+					{/*			className="object-fill"*/}
+					{/*		/>*/}
+					{/*	</Avatar>*/}
+					{/*</div>*/}
+					{renderRolesContextMenu()}
 					<div className="flex items-center text-center justify-center">
 						{renderMemberContextMenu(true, (member = member))}
 					</div>
@@ -147,7 +148,30 @@ export default function LobbyDetailPage() {
 			</div>
 		));
 	};
-	const renderRolesContextMenu = () => {};
+	const renderRolesContextMenu = () => {
+		return (
+			<ContextMenu>
+				<ContextMenuTrigger>
+					<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
+						<Avatar>
+							<AvatarImage
+								src={HardSupport}
+								width="128px"
+								height="64px"
+								className="object-fill"
+							/>
+						</Avatar>
+					</div>
+				</ContextMenuTrigger>
+				<ContextMenuContent>
+					<ContextMenuItem>Profile</ContextMenuItem>
+					<ContextMenuItem>Billing</ContextMenuItem>
+					<ContextMenuItem>Team</ContextMenuItem>
+					<ContextMenuItem>Subscription</ContextMenuItem>
+				</ContextMenuContent>
+			</ContextMenu>
+		);
+	};
 	const renderMemberContextMenu = (isOwner: boolean, member: string) => {
 		if (isOwner) {
 			return (

@@ -5,7 +5,7 @@ import HardSupport from "../../imgs/HardSupport.svg";
 import Midlaner from "../../imgs/Midlaner.svg";
 import Offlane from "../../imgs/Offlane.svg";
 import SoftSupport from "../../imgs/SoftSupport.svg";
-
+import Default from "../../imgs/default.png";
 export default function renderRoleIcons(member) {
 	switch (member?.role) {
 		case "Offlane":
@@ -75,6 +75,15 @@ export default function renderRoleIcons(member) {
 				</>
 			);
 		default:
-			return null;
+			return (
+				<Avatar>
+					<AvatarImage
+						src={Default}
+						width="128px"
+						height="64px"
+						className="object-fill"
+					/>
+				</Avatar>
+			);
 	}
 }

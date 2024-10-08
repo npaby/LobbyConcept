@@ -25,6 +25,7 @@ import Midlaner from "../imgs/Midlaner.svg";
 import Offlane from "../imgs/Offlane.svg";
 import SoftSupport from "../imgs/SoftSupport.svg";
 import { useSockets } from "../providers/socket-provider.tsx";
+import renderRoleIcons from "./common/renderRoleIcon.tsx";
 export default function LobbyDetailPage() {
 	const socket = useSockets();
 	const { lobbyId } = useParams();
@@ -112,17 +113,11 @@ export default function LobbyDetailPage() {
 		if (isUserOwner) {
 			return lobbyInfo?.members?.map((member: any) => (
 				<div className="h-[10dvh] m-4 rounded-3xl bg-amber-950 flex flex-row grid-2 items-center text-center justify-center">
-					{/*<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">*/}
-					{/*	<Avatar>*/}
-					{/*		<AvatarImage*/}
-					{/*			src={HardSupport}*/}
-					{/*			width="128px"*/}
-					{/*			height="64px"*/}
-					{/*			className="object-fill"*/}
-					{/*		/>*/}
-					{/*	</Avatar>*/}
-					{/*</div>*/}
-					{renderRolesContextMenu()}
+					<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
+						{/*{renderRoleIcons(member)}*/}
+						{renderRolesContextMenu(member)}
+					</div>
+
 					<div className="flex items-center text-center justify-center">
 						{renderMemberContextMenu(true, (member = member))}
 					</div>
@@ -132,14 +127,7 @@ export default function LobbyDetailPage() {
 		return lobbyInfo?.members?.map((member: any) => (
 			<div className="h-[10dvh] m-4 rounded-3xl bg-amber-950 flex flex-row grid-2 items-center text-center justify-center">
 				<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
-					<Avatar>
-						<AvatarImage
-							src={HardSupport}
-							width="128px"
-							height="64px"
-							className="object-fill"
-						/>
-					</Avatar>
+					{renderRolesContextMenu(member)}
 				</div>
 				<div className="flex h-24 items-center text-center justify-center">
 					{renderMemberContextMenu(false, (member = member))}
@@ -147,19 +135,12 @@ export default function LobbyDetailPage() {
 			</div>
 		));
 	};
-	const renderRolesContextMenu = () => {
+	const renderRolesContextMenu = (member) => {
 		return (
 			<ContextMenu>
 				<ContextMenuTrigger>
 					<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
-						<Avatar>
-							<AvatarImage
-								src={HardSupport}
-								width="128px"
-								height="64px"
-								className="object-fill"
-							/>
-						</Avatar>
+						{renderRoleIcons(member)}
 					</div>
 				</ContextMenuTrigger>
 				<ContextMenuContent>

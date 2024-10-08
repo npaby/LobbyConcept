@@ -7,11 +7,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../../components/ui/card.tsx";
-import Carry from "../../imgs/Carry.svg";
-import HardSupport from "../../imgs/HardSupport.svg";
-import Midlaner from "../../imgs/Midlaner.svg";
-import Offlane from "../../imgs/Offlane.svg";
-import SoftSupport from "../../imgs/SoftSupport.svg";
 import renderRoleIcons from "../../pages/common/renderRoleIcon.tsx";
 import { useLobbies } from "../../providers/lobbies-provider.tsx";
 import { useSockets } from "../../providers/socket-provider.tsx";

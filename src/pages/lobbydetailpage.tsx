@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import * as React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Avatar, AvatarImage } from "../components/ui/avatar.tsx";
 import { Button } from "../components/ui/button.tsx";
 import {
 	ContextMenu,
@@ -8,9 +9,23 @@ import {
 	ContextMenuItem,
 	ContextMenuTrigger,
 } from "../components/ui/context-menu.tsx";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "../components/ui/select.tsx";
 import { useLocalStorage } from "../hooks/useLocalStorage.tsx";
-import { useSockets } from "../providers/socket-provider.tsx";
+import Offlane from "../imgs/Offlane.svg";
 
+import Carry from "../imgs/Carry.svg";
+import HardSupport from "../imgs/HardSupport.svg";
+import Midlaner from "../imgs/Midlaner.svg";
+import SoftSupport from "../imgs/SoftSupport.svg";
+import { useSockets } from "../providers/socket-provider.tsx";
 export default function LobbyDetailPage() {
 	const socket = useSockets();
 	const { lobbyId } = useParams();
@@ -19,7 +34,8 @@ export default function LobbyDetailPage() {
 	const [storedValue] = useLocalStorage("userData", {});
 	const navigate = useNavigate();
 	const [isUserOwner, setIsUserOwner] = useState(false);
-	const [toMakeOwner, setToMakeOwner] = useState("");
+	const [selectedRole, setSelectedRole] = useState(null);
+
 	console.log("--------------- LOBBY DETAIL PAGE -----------------");
 	// console.log("[LDP]: Rerenders");
 	// console.log(socket);
@@ -47,7 +63,7 @@ export default function LobbyDetailPage() {
 				socket.emit("lobby:getLobbyInfo", lobbyId);
 			});
 			socket.on("lobby:updateLobby:kickMember:youHaveBeenKicked", () => {
-				navigate("../..");
+				navigate("../.."); // Redirect to the homepage if the user leaves the lobby
 			});
 			return () => {
 				socket.off("lobby:getLobbyInfo");
@@ -96,76 +112,109 @@ export default function LobbyDetailPage() {
 			}, [lobbyInfo, storedValue]);
 			if (isUserOwner) {
 				return lobbyInfo?.members?.map((member: any) => (
-					<ContextMenu>
-						<ContextMenuTrigger>
-							<div
-								key={member?.memberId}
-								className="h-[15dvh] bg-black m-4 rounded-3xl text-white flex items-center justify-center"
-							>
-								<div className="text-3xl">
-									{member?.memberId} || {member?.isOwner ? "Owner" : "Member"}
-								</div>
-							</div>
-						</ContextMenuTrigger>
-						<ContextMenuContent>
-							<ContextMenuItem
-								onClick={() => {
-									handleReportMember(member?.memberId);
-								}}
-							>
-								Report
-							</ContextMenuItem>
-							<ContextMenuItem>Add Friend</ContextMenuItem>
-							{!member?.isOwner && (
-								<>
+					<div className="h-[10dvh] m-4 rounded-3xl bg-amber-950 flex flex-row grid-2 items-center text-center justify-center">
+						<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
+							<Avatar>
+								<AvatarImage
+									src={HardSupport}
+									width="128px"
+									height="64px"
+									class="object-fill"
+								/>
+							</Avatar>
+						</div>
+						<div className="flex items-center text-center justify-center">
+							<ContextMenu>
+								<ContextMenuTrigger>
+									<div className="h-24 bg-blue-500">
+										<div
+											key={member?.memberId}
+											className="text-2xl p-3 flex items-center text-center justify-center text-white"
+										>
+											{member?.memberId}
+										</div>
+										<div className="text-2xl">
+											{" "}
+											{member?.isOwner && "Owner"}
+										</div>
+									</div>
+								</ContextMenuTrigger>
+								<ContextMenuContent>
 									<ContextMenuItem
 										onClick={() => {
-											handleMakeOwner(member?.memberId);
+											handleReportMember(member?.memberId);
 										}}
 									>
-										Make Owner
+										Report
 									</ContextMenuItem>
-									<ContextMenuItem
-										onClick={() => {
-											handleKickMember(member?.memberId);
-										}}
-									>
-										Kick User
-									</ContextMenuItem>
-								</>
-							)}
-						</ContextMenuContent>
-					</ContextMenu>
+									<ContextMenuItem>Add Friend</ContextMenuItem>
+									{!member?.isOwner && (
+										<>
+											<ContextMenuItem
+												onClick={() => {
+													handleMakeOwner(member?.memberId);
+												}}
+											>
+												Make Owner
+											</ContextMenuItem>
+											<ContextMenuItem
+												onClick={() => {
+													handleKickMember(member?.memberId);
+												}}
+											>
+												Kick User
+											</ContextMenuItem>
+										</>
+									)}
+								</ContextMenuContent>
+							</ContextMenu>
+						</div>
+					</div>
 				));
 			}
 			return lobbyInfo?.members?.map((member: any) => (
-				<ContextMenu>
-					<ContextMenuTrigger>
-						<div
-							key={member?.memberId}
-							className="h-[15dvh] bg-black m-4 rounded-3xl text-white flex items-center justify-center"
-						>
-							<div className="text-3xl">
-								{member?.memberId} || {member?.isOwner ? "Owner" : "Member"}
-							</div>
-						</div>
-					</ContextMenuTrigger>
-					<ContextMenuContent>
-						<ContextMenuItem
-							onClick={() => {
-								handleReportMember(member?.memberId);
-							}}
-						>
-							Report
-						</ContextMenuItem>
-						<ContextMenuItem>Add Friend</ContextMenuItem>
-					</ContextMenuContent>
-				</ContextMenu>
+				<div className="h-[10dvh] m-4 rounded-3xl bg-amber-950 flex flex-row grid-2 items-center text-center justify-center">
+					<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
+						<Avatar>
+							<AvatarImage
+								src={HardSupport}
+								width="128px"
+								height="64px"
+								class="object-fill"
+							/>
+						</Avatar>
+					</div>
+					<div className="flex items-center text-center justify-center">
+						<ContextMenu>
+							<ContextMenuTrigger>
+								<div className="h-24 bg-blue-500">
+									<div
+										key={member?.memberId}
+										className="text-2xl p-3 flex items-center text-center justify-center text-white"
+									>
+										{member?.memberId}
+									</div>
+									<div className="text-2xl"> {member?.isOwner && "Owner"}</div>
+								</div>
+							</ContextMenuTrigger>
+							<ContextMenuContent>
+								<ContextMenuItem
+									onClick={() => {
+										handleReportMember(member?.memberId);
+									}}
+								>
+									Report
+								</ContextMenuItem>
+								<ContextMenuItem>Add Friend</ContextMenuItem>
+							</ContextMenuContent>
+						</ContextMenu>
+					</div>
+				</div>
 			));
 		};
 
 		return (
-			<>
+			<div className="w-1/3 ">
 				<div className="mb-5">
 					<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 						Lobbies Management
@@ -188,7 +237,7 @@ export default function LobbyDetailPage() {
 						{renderMembers()}
 					</div>
 				</div>
-			</>
+			</div>
 		);
 	}
 	navigate("../..");

@@ -37,8 +37,6 @@ export default function LobbyDetailPage() {
 	const [selectedRole, setSelectedRole] = useState(null);
 
 	console.log("--------------- LOBBY DETAIL PAGE -----------------");
-	// console.log("[LDP]: Rerenders");
-	// console.log(socket);
 
 	useEffect(() => {
 		if (!socket) {
@@ -64,6 +62,10 @@ export default function LobbyDetailPage() {
 		});
 		socket.on("lobby:updateLobby:kickMember:youHaveBeenKicked", () => {
 			navigate("../.."); // Redirect to the homepage if the user leaves the lobby
+		});
+		socket.on("lobby:updateLobby:changeRole", (msg) => {
+			console.log("Role changed!", msg);
+			socket.emit("lobby:getLobbyInfo", lobbyId);
 		});
 		return () => {
 			socket.off("lobby:getLobbyInfo");
@@ -96,6 +98,42 @@ export default function LobbyDetailPage() {
 		socket.emit("lobby:updateLobby:kickMember", { lobbyId, memberId });
 		console.log("Kicking Member ", lobbyId, memberId);
 	}, []);
+
+	// const handleChangeRole = useCallback(
+	// 	(memberId, newRole) => {
+	// 		console.log("Changing role of member ", memberId, newRole);
+	// 		// socket.emit("lobby:updateLobby:changeRole", {
+	// 		// 	lobbyId,
+	// 		// 	memberId,
+	// 		// 	newRole,
+	// 		// });
+	// 		lobbyInfo = setLobbyInfo({
+	// 			...lobbyInfo,
+	// 			members: lobbyInfo.members.map((member) =>
+	// 				member?.memberId === memberId ? (member.role = newRole) : member,
+	// 			),
+	// 		});
+	// 		console.log(lobbyInfo);
+	// 	},
+	// 	[lobbyInfo],
+	// );
+	const handleChangeRole = useCallback(
+		(memberId: string, newRole: string) => {
+			alert("You changed your role to ", newRole);
+			setLobbyInfo({
+				...lobbyInfo,
+				members: lobbyInfo.members.map((member) =>
+					member?.memberId === memberId ? { ...member, role: newRole } : member,
+				),
+			});
+			socket.emit("lobby:updateLobby:changeRole", {
+				lobbyId,
+				memberId,
+				newRole,
+			});
+		},
+		[lobbyInfo],
+	);
 
 	const renderMembers = () => {
 		useEffect(() => {
@@ -136,20 +174,62 @@ export default function LobbyDetailPage() {
 		));
 	};
 	const renderRolesContextMenu = (member) => {
+		const currentUser = storedValue.sub === member?.memberId;
+		console.log("current user: ", currentUser);
+		if (currentUser) {
+			return (
+				<ContextMenu>
+					<ContextMenuTrigger>
+						<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
+							{renderRoleIcons(member)}
+						</div>
+					</ContextMenuTrigger>
+					<ContextMenuContent>
+						<ContextMenuItem
+							onClick={() => {
+								handleChangeRole(member?.memberId, "Offlane");
+							}}
+						>
+							Offlane
+						</ContextMenuItem>
+						<ContextMenuItem
+							onClick={() => {
+								handleChangeRole(member?.memberId, "SoftSupport");
+							}}
+						>
+							SoftSupport
+						</ContextMenuItem>
+						<ContextMenuItem
+							onClick={() => {
+								handleChangeRole(member?.memberId, "HardSupport");
+							}}
+						>
+							HardSupport
+						</ContextMenuItem>
+						<ContextMenuItem
+							onClick={() => {
+								handleChangeRole(member?.memberId, "Carry");
+							}}
+						>
+							Carry
+						</ContextMenuItem>
+						<ContextMenuItem
+							onClick={() => {
+								handleChangeRole(member?.memberId, "Midlaner");
+							}}
+						>
+							Midlaner
+						</ContextMenuItem>
+					</ContextMenuContent>
+				</ContextMenu>
+			);
+		}
 		return (
-			<ContextMenu>
-				<ContextMenuTrigger>
-					<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
-						{renderRoleIcons(member)}
-					</div>
-				</ContextMenuTrigger>
-				<ContextMenuContent>
-					<ContextMenuItem>Profile</ContextMenuItem>
-					<ContextMenuItem>Billing</ContextMenuItem>
-					<ContextMenuItem>Team</ContextMenuItem>
-					<ContextMenuItem>Subscription</ContextMenuItem>
-				</ContextMenuContent>
-			</ContextMenu>
+			<>
+				<div className=" w-24 h-24 flex bg-amber-200 rounded-full items-center text-center justify-center">
+					{renderRoleIcons(member)}
+				</div>
+			</>
 		);
 	};
 	const renderMemberContextMenu = (isOwner: boolean, member: string) => {

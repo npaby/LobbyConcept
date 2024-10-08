@@ -39,9 +39,9 @@ export default function LobbiesCard({ lobby }) {
 				<div className="text-sm text-gray-500 p-5 bg-cyan-300 w-full bg-amber-950">
 					{lobby?.lobbyRank || "Lobby Rank"}
 				</div>
-				<div className="text-sm m-2 text-gray-500 bg-amber-300 p-2 rounded-2xl">
+				<div className="text-sm m-2 flex gap-4 items-center justify-center text-gray-500 bg-amber-300 p-2 rounded-2xl">
 					{lobby?.members?.map((member) => (
-						<div key={member.memberId}>
+						<div key={member.memberId} className="bg-blue-500 rounded-full p-2">
 							{/*{member.memberId} || {member?.isOwner ? "O" : "M"}*/}
 							{renderRoleIcons(member)}
 						</div>

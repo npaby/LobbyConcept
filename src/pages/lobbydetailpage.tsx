@@ -237,15 +237,26 @@ export default function LobbyDetailPage() {
 			return (
 				<ContextMenu>
 					<ContextMenuTrigger>
-						<div className="h-24 bg-blue-500">
-							<div
-								key={member?.memberId}
-								className="text-2xl p-3 flex items-center text-center justify-center text-white"
-							>
-								{member?.memberId}
+						{member?.isOwner ? (
+							<div className="h-24 bg-blue-500">
+								<div
+									key={member?.memberId}
+									className="text-2xl p-3 flex items-center text-center justify-center text-white"
+								>
+									{member?.memberId}
+								</div>
+								<div className="text-2xl"> Host</div>
 							</div>
-							<div className="text-2xl"> {member?.isOwner && "Owner"}</div>
-						</div>
+						) : (
+							<div className="h-24 bg-blue-500 flex items-center text-center justify-center text-white">
+								<div
+									key={member?.memberId}
+									className="text-2xl p-3 flex items-center text-center justify-center text-white"
+								>
+									{member?.memberId}
+								</div>
+							</div>
+						)}
 					</ContextMenuTrigger>
 					<ContextMenuContent>
 						<ContextMenuItem

@@ -19,11 +19,10 @@ import {
 	SelectValue,
 } from "../components/ui/select.tsx";
 import { useLocalStorage } from "../hooks/useLocalStorage.tsx";
-import Offlane from "../imgs/Offlane.svg";
-
 import Carry from "../imgs/Carry.svg";
 import HardSupport from "../imgs/HardSupport.svg";
 import Midlaner from "../imgs/Midlaner.svg";
+import Offlane from "../imgs/Offlane.svg";
 import SoftSupport from "../imgs/SoftSupport.svg";
 import { useSockets } from "../providers/socket-provider.tsx";
 export default function LobbyDetailPage() {

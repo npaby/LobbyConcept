@@ -43,6 +43,11 @@ export default function LobbyDetailPage() {
 			console.error("Socket is not initialized.");
 			return;
 		}
+		socket.on("lobby:goBackToPreviousLobby", (msg) => {
+			console.log("Navigating to previous lobby");
+			navigate(`../lobby/${msg}`);
+			socket.emit("lobby:getLobbyInfo", msg);
+		});
 		socket.emit("lobby:getLobbyInfo", lobbyId);
 		socket.on("lobby:getLobbyInfo", (msg) => {
 			setLobbyInfo(msg);
@@ -67,13 +72,18 @@ export default function LobbyDetailPage() {
 			console.log("Role changed!", msg);
 			socket.emit("lobby:getLobbyInfo", lobbyId);
 		});
+
 		return () => {
 			socket.off("lobby:getLobbyInfo");
 			socket.off("lobby:joinLobby");
 			socket.off("lobby:leaveLobby");
 			socket.off("lobby:updateLobby:makeOwner");
+			socket.off("lobby:updateLobby:kickMember");
+			socket.off("lobby:updateLobby:kickMember:youHaveBeenKicked");
+			socket.off("lobby:updateLobby:changeRole");
+			socket.off("lobby:goBackToPreviousLobby");
 		};
-	}, []);
+	}, [socket]);
 
 	const handleLeaveLobby = () => {
 		if (socket) {
@@ -98,25 +108,6 @@ export default function LobbyDetailPage() {
 		socket.emit("lobby:updateLobby:kickMember", { lobbyId, memberId });
 		console.log("Kicking Member ", lobbyId, memberId);
 	}, []);
-
-	// const handleChangeRole = useCallback(
-	// 	(memberId, newRole) => {
-	// 		console.log("Changing role of member ", memberId, newRole);
-	// 		// socket.emit("lobby:updateLobby:changeRole", {
-	// 		// 	lobbyId,
-	// 		// 	memberId,
-	// 		// 	newRole,
-	// 		// });
-	// 		lobbyInfo = setLobbyInfo({
-	// 			...lobbyInfo,
-	// 			members: lobbyInfo.members.map((member) =>
-	// 				member?.memberId === memberId ? (member.role = newRole) : member,
-	// 			),
-	// 		});
-	// 		console.log(lobbyInfo);
-	// 	},
-	// 	[lobbyInfo],
-	// );
 	const handleChangeRole = useCallback(
 		(memberId: string, newRole: string) => {
 			alert("You changed your role to ", newRole);
@@ -175,7 +166,6 @@ export default function LobbyDetailPage() {
 	};
 	const renderRolesContextMenu = (member) => {
 		const currentUser = storedValue.sub === member?.memberId;
-		console.log("current user: ", currentUser);
 		if (currentUser) {
 			return (
 				<ContextMenu>

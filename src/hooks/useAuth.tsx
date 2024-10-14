@@ -12,6 +12,7 @@ const getUserData = async () => {
 		const { data } = await axios.get("http://localhost:3000/users/getInfo", {
 			withCredentials: true,
 		});
+		console.log("User data fetched:", data);
 		return data;
 	} catch (error) {
 		console.error("Failed to fetch user data:", error);
@@ -23,7 +24,10 @@ export const AuthProvider = ({ children }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(null);
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [cookies] = useCookies();
-	const [storedValue, setStoredValue] = useLocalStorage("userData", null);
+	const [storedValue, setStoredValue] = useLocalStorage(
+		"userData",
+		getUserData(),
+	);
 	const login = () => setIsAuthenticated(true);
 	const logout = () => {
 		setIsAuthenticated(false);
@@ -56,7 +60,9 @@ export const AuthProvider = ({ children }) => {
 				}
 			}
 		};
-		fetchUserData();
+		if (storedValue === null) {
+			fetchUserData();
+		}
 		return () => {};
 	}, [isAuthenticated]);
 	return (

@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./hooks/useAuth.tsx";
 import { ProtectedRoute } from "./pages/common/ProtectedRoute.tsx";
+import LobbyPage from "./pages/lobby-page.tsx";
 import LobbyDashboardPage from "./pages/lobbydashboardpage.tsx";
 import LobbyDetailPage from "./pages/lobbydetailpage.tsx";
 import SignInPage from "./pages/signin.tsx";
@@ -31,7 +32,7 @@ function AppRoutes() {
 							element={
 								<ProtectedRoute>
 									<LobbiesProvider>
-										<LobbyDetailPage />
+										<LobbyPage />
 									</LobbiesProvider>
 								</ProtectedRoute>
 							}

@@ -6,19 +6,47 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../components/ui/card.tsx";
+import { useLocalStorage } from "../hooks/useLocalStorage.tsx";
 
 export default function SignInPage() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const getUserData = async () => {
+		try {
+			const { data } = await axios.get("http://localhost:3000/users/getInfo", {
+				withCredentials: true,
+			});
+			console.log("User data fetched:", data);
+			return data;
+		} catch (error) {
+			console.error("Failed to fetch user data:", error);
+			return null;
+		}
+	};
+	const [, setStoredValue] = useLocalStorage("userData", {});
 	const handleSubmit = async () => {
 		const newUser = {
 			email: email,
 			password: password,
 		};
 		console.log(newUser);
-		axios.post("http://localhost:3000/authentication/signin", newUser, {
-			withCredentials: true,
-		});
+		try {
+			const response = await axios.post(
+				"http://localhost:3000/authentication/signin",
+				newUser,
+				{
+					withCredentials: true,
+				},
+			);
+			if (response.status === 200) {
+				const data = await getUserData();
+				if (data) {
+					setStoredValue(data);
+				}
+			}
+		} catch (error) {
+			console.error("Sign in failed:", error);
+		}
 	};
 
 	return (

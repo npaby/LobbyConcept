@@ -307,16 +307,16 @@ export default function LobbyDetailPage() {
 	};
 	return (
 		<div className="w-1/3 ">
-			<div className="mb-5">
-				<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-					Lobbies Management
-				</h1>
-				<h1 className="text-3xl m-4">
-					UID: {storedValue.sub} SID: {socket.id}
-				</h1>
-			</div>
 			<div className="flex p-0 m-0">
 				<div className="bg-amber-300 w-full h-dvh">
+					<div className="mb-5">
+						<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+							Lobbies Management
+						</h1>
+						<h1 className="text-3xl m-4">
+							UID: {storedValue.sub} SID: {socket.id}
+						</h1>
+					</div>
 					<div className="h-[15dvh] bg-cyan-300 m-4 rounded-3xl">
 						<div className="p-2">
 							<h1 className="text-3xl">{lobbyInfo?.roomName}</h1>

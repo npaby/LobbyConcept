@@ -31,14 +31,6 @@ export const SocketsProvider = ({ children }: { children: ReactNode }) => {
 		});
 		return socketInstance;
 	}, [cookies.accessToken]);
-	// useEffect(() => {
-	// 	return () => {
-	// 		if (socket) {
-	// 			socket.disconnect();
-	// 			console.log("Socket disconnected");
-	// 		}
-	// 	};
-	// }, [socket]);
 	return (
 		<SocketsContext.Provider value={{ socket }}>
 			{children}

@@ -33,10 +33,19 @@ export default function LobbyChatroom() {
 		console.log("this is called");
 		chatRoomSocket.emit("chat:joinChatroom", lobbyId);
 		chatRoomSocket.on("chat:sendMessage", (message) => {
-			messagesDatas.push(message);
+			setMessagesDatas([...messagesDatas, message]);
+		});
+		chatRoomSocket.on("chatRoom:getMessages", (messages) => {
+			setMessagesDatas(messages);
+		});
+		chatRoomSocket.on("chatRoom:newMessage", (message) => {
+			setMessagesDatas([...messagesDatas, message]);
 		});
 		return () => {
-			chatRoomSocket.off("chat:newMessage");
+			chatRoomSocket.off("chatRoom:sendMessage");
+			chatRoomSocket.off("chatRoom:getMessages");
+			chatRoomSocket.off("chatRoom:joinChatroom");
+			chatRoomSocket.off("chatRoom:newMessage");
 		};
 	}, []);
 	const handleSendMessage = () => {
@@ -50,6 +59,7 @@ export default function LobbyChatroom() {
 		console.log("B Messages data length: ", messagesDatas.length);
 		setMessagesDatas([...messagesDatas, messageToSend]);
 		console.log("A Messages data length: ", messagesDatas.length);
+		setMessage("");
 	};
 	return (
 		<>
@@ -59,34 +69,28 @@ export default function LobbyChatroom() {
 				</CardHeader>
 				<CardContent className="flex-1 p-5">
 					<ScrollArea className="h-[80dvh] w-full">
-						<div className="w-full">
-							{messagesDatas.map((message, index) => (
-								<div className="mb-4" key={index}>
-									{storedValue.sub === message.senderId ? (
-										<div className="text-right">
-											<div className="">
-												<div className="font-bold text-sm text-gray-500">
-													{message.senderId}
-												</div>
-												<div className="ml-2 text-sm text-gray-500">
-													{message.text}
-												</div>
+						<div className="p-5 w-full">
+							{messagesDatas.map((message, index) => {
+								const isSender = storedValue.sub === message.senderId;
+								const containerClasses = `flex mb-4 ${isSender ? "justify-end" : "justify-start"}`;
+								const messageClasses = `p-2 rounded-lg ${
+									isSender
+										? "bg-amber-950 text-right w-4/6"
+										: "bg-amber-950 text-left w-2/3"
+								}`;
+								return (
+									<div className={containerClasses} key={index}>
+										<div className={messageClasses}>
+											<div className="font-bold text-sm text-gray-500">
+												{message.senderId}
+											</div>
+											<div className="ml-2 text-sm text-gray-500">
+												{message.text}
 											</div>
 										</div>
-									) : (
-										<div className="text-left">
-											<div className="">
-												<div className="font-bold text-sm text-gray-500">
-													{message.senderId}
-												</div>
-												<div className="ml-2 text-sm text-gray-500">
-													{message.text}
-												</div>
-											</div>
-										</div>
-									)}
-								</div>
-							))}
+									</div>
+								);
+							})}
 							<div ref={messagesEndRef} />
 						</div>
 					</ScrollArea>
@@ -94,6 +98,7 @@ export default function LobbyChatroom() {
 						className="mt-4 h-12 text-black"
 						placeholder="Type your message here."
 						onChange={(e) => setMessage(e.target.value)}
+						value={message}
 					/>
 					<Button
 						className="mt-2 w-full bg-blue-400 text-white"

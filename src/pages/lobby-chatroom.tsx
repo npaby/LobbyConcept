@@ -7,7 +7,7 @@ import {
 
 import { Button } from "../components/ui/button";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { Textarea } from "../components/ui/textarea";
@@ -18,13 +18,22 @@ export default function LobbyChatroom() {
 	const chatRoomSocket = useSockets()[0];
 	const [storedValue] = useLocalStorage("userData", {});
 	const { lobbyId } = useParams();
-	const [messageDatas, setMessageDatas] = useState([messageData]);
+	const [messagesDatas, setMessagesDatas] = useState(messageData);
 	const [message, setMessage] = useState("");
-
+	const messagesEndRef = useRef<null | HTMLDivElement>(null);
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	};
 	useEffect(() => {
+		scrollToBottom();
+	}, [messagesDatas]);
+
+	console.log("--------------- LOBBY CHATROOM -----------------");
+	useEffect(() => {
+		console.log("this is called");
 		chatRoomSocket.emit("chat:joinChatroom", lobbyId);
 		chatRoomSocket.on("chat:sendMessage", (message) => {
-			messageData.push(message);
+			messagesDatas.push(message);
 		});
 		return () => {
 			chatRoomSocket.off("chat:newMessage");
@@ -38,9 +47,9 @@ export default function LobbyChatroom() {
 		};
 		console.log("Sending message: ", messageToSend);
 		// chatRoomSocket.emit("chat:sendMessage", messageToSend);
-		console.log("B Messages data length: ", messageDatas.length);
-		setMessageDatas(messageDatas.concat(messageToSend));
-		console.log("A Messages data length: ", messageDatas.length);
+		console.log("B Messages data length: ", messagesDatas.length);
+		setMessagesDatas([...messagesDatas, messageToSend]);
+		console.log("A Messages data length: ", messagesDatas.length);
 	};
 	return (
 		<>
@@ -49,20 +58,36 @@ export default function LobbyChatroom() {
 					<CardTitle>Chatroom</CardTitle>
 				</CardHeader>
 				<CardContent className="flex-1 p-5">
-					<ScrollArea className="h-[80dvh]">
-						<div>
-							{messageData.map((message) => (
-								<div className="mb-4">
-									<div className="text-left">
-										<div className="font-bold text-sm text-gray-500">
-											{message.senderId}
+					<ScrollArea className="h-[80dvh] w-full">
+						<div className="w-full">
+							{messagesDatas.map((message, index) => (
+								<div className="mb-4" key={index}>
+									{storedValue.sub === message.senderId ? (
+										<div className="text-right">
+											<div className="">
+												<div className="font-bold text-sm text-gray-500">
+													{message.senderId}
+												</div>
+												<div className="ml-2 text-sm text-gray-500">
+													{message.text}
+												</div>
+											</div>
 										</div>
-										<div className="ml-2 text-sm text-gray-500">
-											{message.text}
+									) : (
+										<div className="text-left">
+											<div className="">
+												<div className="font-bold text-sm text-gray-500">
+													{message.senderId}
+												</div>
+												<div className="ml-2 text-sm text-gray-500">
+													{message.text}
+												</div>
+											</div>
 										</div>
-									</div>
+									)}
 								</div>
 							))}
+							<div ref={messagesEndRef} />
 						</div>
 					</ScrollArea>
 					<Textarea

@@ -877,6 +877,10 @@ body {
   width: 6rem;
 }
 
+.w-28 {
+  width: 7rem;
+}
+
 .w-3\.5 {
   width: 0.875rem;
 }
@@ -971,6 +975,14 @@ body {
 
 .items-center {
   align-items: center;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
 }
 
 .justify-center {
@@ -1285,6 +1297,10 @@ body {
   text-align: center;
 }
 
+.text-right {
+  text-align: right;
+}
+
 .align-middle {
   vertical-align: middle;
 }
@@ -1363,11 +1379,6 @@ body {
 .text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-
-.text-gray-700 {
-  --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 
 .text-muted-foreground {

@@ -95,6 +95,7 @@ export default function LobbyDetailPage() {
 	};
 	const handleMakeOwner = useCallback((memberId) => {
 		console.log("You promoted someone!", memberId);
+		setIsUserOwner(false);
 		socket.emit("lobby:updateLobby:makeOwner", {
 			lobbyId,
 			memberId,

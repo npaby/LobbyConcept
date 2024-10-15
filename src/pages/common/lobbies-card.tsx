@@ -11,7 +11,7 @@ import renderRoleIcons from "../../pages/common/renderRoleIcon.tsx";
 import { useLobbies } from "../../providers/lobbies-provider.tsx";
 import { useSockets } from "../../providers/socket-provider.tsx";
 export default function LobbiesCard({ lobby }) {
-	const socket = useSockets();
+	const socket = useSockets()[1];
 	const { joinLobby } = useLobbies();
 	const navigate = useNavigate();
 

@@ -12,7 +12,7 @@ export const LobbiesProvider = ({ children }) => {
 	const [selectedLobby, setSelectedLobby] = useState("");
 	const navigate = useNavigate();
 	const [cookies] = useCookies();
-	const socketCurrent: Socket | null = useSockets();
+	const socketCurrent: Socket | null = useSockets()[1];
 	console.log("[LP]: Rerenders");
 
 	useEffect(() => {

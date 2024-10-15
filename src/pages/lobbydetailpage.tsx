@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import * as React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import type { Socket } from "socket.io-client";
 import { Avatar, AvatarImage } from "../components/ui/avatar.tsx";
 import { Button } from "../components/ui/button.tsx";
 import {
@@ -27,7 +28,7 @@ import SoftSupport from "../imgs/SoftSupport.svg";
 import { useSockets } from "../providers/socket-provider.tsx";
 import renderRoleIcons from "./common/renderRoleIcon.tsx";
 export default function LobbyDetailPage() {
-	const socket = useSockets();
+	const socket: Socket = useSockets()[1];
 	const { lobbyId } = useParams();
 	const [leaveLobby, setLeaveLobby] = useState(false);
 	const [lobbyInfo, setLobbyInfo] = useState(null);

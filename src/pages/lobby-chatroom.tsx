@@ -9,8 +9,9 @@ import { Button } from "../components/ui/button";
 
 import { ScrollArea } from "../components/ui/scroll-area";
 import { Textarea } from "../components/ui/textarea";
-
+import { useSockets } from "../providers/socket-provider";
 export default function LobbyChatroom() {
+	const chatRoomSocket = useSockets()[0];
 	return (
 		<>
 			<Card className="w-2/3 flex flex-col">
@@ -20,7 +21,7 @@ export default function LobbyChatroom() {
 				<CardContent className="flex-1 p-5">
 					<ScrollArea className="h-[80dvh]">
 						<div>
-							{Array(20)
+							{Array(200)
 								.fill(
 									"lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed facilisis, lectus sed posuere tincidunt,",
 								)

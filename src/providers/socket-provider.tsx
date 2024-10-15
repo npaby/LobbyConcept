@@ -1,38 +1,28 @@
-import {
-	type ReactNode,
-	createContext,
-	useContext,
-	useEffect,
-	useMemo,
-} from "react";
-import { useCookies } from "react-cookie";
+import { type ReactNode, createContext, useContext } from "react";
 import io, { type Socket } from "socket.io-client";
 
-// Fix: Properly initialize the context by calling createContext()
 interface SocketsContextType {
-	socket: Socket | null; // Adjusted for type safety
+	sockets: [Socket] | null;
 }
 const SocketsContext = createContext<SocketsContextType | undefined>(undefined);
-
+const SocketsNamespaces = ["chatroom", "lobby"];
 export const SocketsProvider = ({ children }: { children: ReactNode }) => {
-	const [cookies] = useCookies();
-
-	const socket = useMemo(() => {
-		const socketInstance = io("ws://localhost:3000", {
-			auth: {
-				token: cookies.accessToken,
-			},
+	const sockets: [Socket] = [];
+	SocketsNamespaces.forEach((namespace) => {
+		const socketInstance: Socket = io(`ws://localhost:3000/${namespace}`, {
 			transports: ["websocket"],
 			upgrade: false,
 			reconnection: true,
+			withCredentials: true,
 		});
 		socketInstance.on("connect", () => {
-			console.log("Socket connected");
+			console.log("New connection to namespace: ", namespace);
 		});
-		return socketInstance;
-	}, [cookies.accessToken]);
+		sockets.push(socketInstance);
+	});
+	console.log("Sockets: ", sockets);
 	return (
-		<SocketsContext.Provider value={{ socket }}>
+		<SocketsContext.Provider value={{ sockets }}>
 			{children}
 		</SocketsContext.Provider>
 	);
@@ -42,5 +32,5 @@ export const useSockets = () => {
 	if (!context) {
 		throw new Error("useSockets must be used within a SocketsProvider");
 	}
-	return context.socket;
+	return context.sockets;
 };

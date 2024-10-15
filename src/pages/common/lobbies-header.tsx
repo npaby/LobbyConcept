@@ -38,7 +38,7 @@ export default function LobbiesHeader() {
 		memberId: "",
 		role: "",
 	});
-	const socket = useSockets();
+	const socket = useSockets()[1];
 	const [storedValue] = useLocalStorage("userData", {});
 	const handleCreateLobby = () => {
 		console.log(lobbyData);

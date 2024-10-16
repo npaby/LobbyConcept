@@ -18,7 +18,7 @@ export default function LobbyChatroom() {
 	const chatRoomSocket = useSockets()[0];
 	const [storedValue] = useLocalStorage("userData", {});
 	const { lobbyId } = useParams();
-	const [messagesDatas, setMessagesDatas] = useState(messageData);
+	const [messagesDatas, setMessagesDatas] = useState([]);
 	const [message, setMessage] = useState("");
 	const messagesEndRef = useRef<null | HTMLDivElement>(null);
 	const scrollToBottom = () => {
@@ -31,19 +31,24 @@ export default function LobbyChatroom() {
 	console.log("--------------- LOBBY CHATROOM -----------------");
 	useEffect(() => {
 		console.log("this is called");
-		chatRoomSocket.emit("chat:joinChatroom", lobbyId);
-		chatRoomSocket.on("chat:sendMessage", (message) => {
+		chatRoomSocket.emit("chatRoom:joinChatroom", lobbyId, (response) => {
+			console.log(response);
+			setMessagesDatas(response);
+		});
+		chatRoomSocket.on("chatRoom:sendMessage", (message) => {
 			setMessagesDatas([...messagesDatas, message]);
 		});
 		chatRoomSocket.on("chatRoom:getMessages", (messages) => {
 			setMessagesDatas(messages);
 		});
 		chatRoomSocket.on("chatRoom:newMessage", (message) => {
-			setMessagesDatas([...messagesDatas, message]);
+			setMessagesDatas((prevMessages) => {
+				return [...prevMessages, message];
+			});
+			console.log("New message received: ", message);
 		});
 		return () => {
 			chatRoomSocket.off("chatRoom:sendMessage");
-			chatRoomSocket.off("chatRoom:getMessages");
 			chatRoomSocket.off("chatRoom:joinChatroom");
 			chatRoomSocket.off("chatRoom:newMessage");
 		};
@@ -54,11 +59,13 @@ export default function LobbyChatroom() {
 			text: message,
 			senderId: storedValue.sub,
 		};
+
 		console.log("Sending message: ", messageToSend);
-		// chatRoomSocket.emit("chat:sendMessage", messageToSend);
-		console.log("B Messages data length: ", messagesDatas.length);
-		setMessagesDatas([...messagesDatas, messageToSend]);
-		console.log("A Messages data length: ", messagesDatas.length);
+		chatRoomSocket.emit("chatRoom:sendMessage", messageToSend, () => {
+			setMessagesDatas((prevMessages) => {
+				return [...prevMessages, messageToSend];
+			});
+		});
 		setMessage("");
 	};
 	return (
@@ -71,22 +78,26 @@ export default function LobbyChatroom() {
 					<ScrollArea className="h-[80dvh] w-full">
 						<div className="p-5 w-full">
 							{messagesDatas.map((message, index) => {
-								const isSender = storedValue.sub === message.senderId;
-								const containerClasses = `flex mb-4 ${isSender ? "justify-end" : "justify-start"}`;
-								const messageClasses = `p-2 rounded-lg ${
-									isSender
-										? "bg-amber-950 text-right w-4/6"
-										: "bg-amber-950 text-left w-2/3"
-								}`;
-								return (
-									<div className={containerClasses} key={index}>
-										<div className={messageClasses}>
-											<div className="font-bold text-sm text-gray-500">
-												{message.senderId}
-											</div>
-											<div className="ml-2 text-sm text-gray-500">
+								const isSender = storedValue.sub === message?.senderId;
+								const isSystemMessage = !message?.senderId;
+								const containerClasses = `flex mb-2 ${isSender ? "justify-end" : "justify-start"}`;
+								const messageClasses = `p-2 rounded-lg ${isSender ? "bg-blue-600 text-right w-4/6" : "bg-gray-700 text-left w-4/6"} text-white`;
+								if (isSystemMessage) {
+									return (
+										<div key={index} className="text-center m-3">
+											<div className="text-sm text-gray-800 ">
 												{message.text}
 											</div>
+										</div>
+									);
+								}
+								return (
+									<div key={index} className={containerClasses}>
+										<div className={messageClasses}>
+											<div className="font-bold text-xs text-gray-300">
+												{message.senderId}
+											</div>
+											<div className="text-sm text-white">{message.text}</div>
 										</div>
 									</div>
 								);
@@ -108,7 +119,6 @@ export default function LobbyChatroom() {
 					</Button>
 				</CardContent>
 			</Card>
-			;
 		</>
 	);
 }
